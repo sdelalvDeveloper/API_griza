@@ -4,10 +4,8 @@ import com.es.API_REST_SEGURA.dto.LoginUsuarioDTO
 import com.es.API_REST_SEGURA.dto.UsuarioRegisterDTO
 import com.es.API_REST_SEGURA.error.exception.UnauthorizedException
 import com.es.API_REST_SEGURA.model.Usuario
-import com.es.API_REST_SEGURA.repository.UsuarioRepository
 import com.es.API_REST_SEGURA.service.TokenService
 import com.es.API_REST_SEGURA.service.UsuarioService
-import com.es.API_REST_SEGURA.util.DtoMapper
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -17,14 +15,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("/usuarios")
 class UsuarioController {
-
-    @Autowired
-    private lateinit var usuarioRepository: UsuarioRepository
 
     @Autowired
     private lateinit var authenticationManager: AuthenticationManager
@@ -49,7 +43,7 @@ class UsuarioController {
         // PASAMOS A GENERAR EL TOKEN
         val token = tokenService.generarToken(authentication)
 
-        return ResponseEntity(mapOf("token" to token), HttpStatus.CREATED)
+        return ResponseEntity(mapOf("token" to token), HttpStatus.OK)
     }
 
     @PostMapping("/register")
@@ -64,10 +58,17 @@ class UsuarioController {
     }
 
     @GetMapping("/{username}")
-    fun getUser(httpRequest: HttpServletRequest, @PathVariable username: String): ResponseEntity<Optional<Usuario>> {
-        val usuario = usuarioRepository.findByUsername(username)
+    fun getUser(httpRequest: HttpServletRequest, @PathVariable username: String): ResponseEntity<Any>? {
+        val usuarioRegistrado = usuarioService.loadUserByUsername(username)
 
-        return ResponseEntity(usuario, HttpStatus.OK)
+        return ResponseEntity(usuarioRegistrado, HttpStatus.OK)
+    }
+
+    @DeleteMapping("/{username}")
+    fun deleteUser(httpRequest: HttpServletRequest, @PathVariable username: String): ResponseEntity<Any>? {
+        val usuarioEliminado = usuarioService.deleteUserByUsername(username)
+
+        return ResponseEntity(usuarioEliminado, HttpStatus.NO_CONTENT)
     }
 
 

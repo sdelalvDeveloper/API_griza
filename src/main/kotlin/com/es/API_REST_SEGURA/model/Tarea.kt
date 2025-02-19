@@ -13,9 +13,9 @@ enum class Estado(val estado: String) {
 data class Tarea(
     @BsonId
     val _id: String?,
-    val usuario_id: String,  // email
+    val username: String,  // username
     val titulo: String,
     val descripcion: String,
-    val estado: Estado = Estado.PENDIENTE,
+    var estado: Estado = Estado.PENDIENTE,
     val fecha_created: Date? = Date.from(Instant.now())
 )

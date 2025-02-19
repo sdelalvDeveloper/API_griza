@@ -2,16 +2,17 @@ package com.es.API_REST_SEGURA.service
 
 import com.es.API_REST_SEGURA.dto.UsuarioRegisterDTO
 import com.es.API_REST_SEGURA.error.exception.BadRequestException
-import com.es.API_REST_SEGURA.error.exception.UnauthorizedException
+import com.es.API_REST_SEGURA.error.exception.NotFoundException
 import com.es.API_REST_SEGURA.model.Usuario
 import com.es.API_REST_SEGURA.repository.UsuarioRepository
 import com.es.API_REST_SEGURA.util.DtoMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.stereotype.Service
 
 @Service
@@ -27,7 +28,7 @@ class UsuarioService() : UserDetailsService {
         val usuario: Usuario = usuarioRepository
             .findByUsername(username!!)
             .orElseThrow() {
-                UnauthorizedException("$username no existe.")
+                NotFoundException("$username no existe.")
             }
 
         return User.builder()
@@ -67,5 +68,15 @@ class UsuarioService() : UserDetailsService {
             usuarioRepository.save(usuario)
             return usuario
         }
+    }
+
+    fun deleteUserByUsername(username: String): ResponseEntity<Usuario>{
+        val usuarioRegistrado: Usuario = usuarioRepository
+            .findByUsername(username)
+            .orElseThrow() { NotFoundException("$username no existe.") }
+
+        usuarioRepository.delete(usuarioRegistrado)
+
+        return ResponseEntity(usuarioRegistrado, HttpStatus.OK)
     }
 }
