@@ -116,4 +116,24 @@ Este documento representa las tareas asignadas a los usuarios.
 
 3. **Validación de entradas**:
    - Se valida que los datos entrantes sean correctos.
+  
+---
+
+## Pruebas gestión de usuarios
+
+### Retrofit
+Es un object que contiene la url de nuestra api en render y nos devuelve un ApiService.
+![Object Retrofit](assets/retrofit.png)
+
+### ApiService
+Es una interfaz que se encarga de las peticiones a nuestra api.
+![Interface ApiService](assets/apiService.png)
+
+### Clases para login
+Son las clases que usamos para mandar la petición del loginy para el *Response* del endpoint.
+![Clases login](assets/clases_login.png)
+
+### Clases para registro
+Son las clases que usamos para mandar la petición del registro y para el *Response* del endpoint.
+![Clases login](assets/clases_registro.png)
 
