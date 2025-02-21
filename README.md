@@ -142,11 +142,41 @@ Primero comprobamos nuestra base de datos que está vacía.
 ![BD](assets/comprobar_bd.png)
 
 Si intentamos loguearnos, lógicamente dará error.
-![Login_intro_inexistente](assets/intro_login_correcto.png)
+![Login_intro_inexistente](assets/intro_login_pepe.png)
 ![Login_respuesta_inexistente](assets/respuesta_login_pepe_incorrecto.png)
 
 Por lo tanto, vamos a registrar un usuario de forma correcta para hacer las pruebas del login. Después probaremos los errores del registro.
 ![Intro_user](assets/intro_registro_correcto.png)
 ![Respuesta_registro](assets/respuesta_registro_correcto.png)
+
+Volvemos a nuestra pantalla de login.
+Vamos a intentar acceder introduciendo mal la constraseña: correcta(123) - incorrecta(1234).
+![Login_incorrecto](assets/intro_login_pepe_incorrecto.png)
+![Login_incorrecto](assets/respuesta_login_pepe_incorrecto.png)
+
+Ahora introducimos la contraseña correcta: 123.
+![Login_correcto](assets/intro_login_correcto.png)
+![Login_correcto](assets/comprobar_pepe_login.png)
+
+### Pruebas registro
+
+Ya hemos introducido un usuario **pepe**.
+Vamos a intentar introducir otro con el mismo nombre de usuario.
+![Registro_repetido](assets/intro_registro_repetido.png)
+![Registro_repetido](assets/respuesta_insert_repetido.png)
+
+Ahora, vamos a introducir un nuevo usuario, pero con un error en la **Provincia**.
+![Registro_incorrecto](assets/intro_registro_provincia.png)
+![Registro_repetido](assets/respuesta_insert_provincia.png)
+
+Repetimos la acción, ahora con el error en el **Municipio**.
+![Registro_repetido](assets/intro_registro_municipio.png)
+![Registro_repetido](assets/respuesta_insert_municipio2.png)
+
+Por último, intentamos registrar al nuevo usuario con los datos correctos.
+![Registro_correcto](assets/intro_registro_municipio_correcto.png)
+![Registro_correcto](assets/respuesta_registro_municipio_correcto.png)
+
+
 
 
