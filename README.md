@@ -167,7 +167,7 @@ Vamos a intentar introducir otro con el mismo nombre de usuario.
 ![Registro_repetido](assets/intro_registro_repetido.png)
 ![Registro_repetido](assets/respuesta_insert_repetido.png)
 
-Ahora, vamos a introducir un nuevo usuario, pero con un error en la **Provincia**.
+Vamos a introducir un nuevo usuario para probar otros errores, en esta ocasión con la **Provincia**.
 ![Registro_incorrecto](assets/intro_registro_provincia.png)
 ![Registro_repetido](assets/respuesta_insert_provincia.png)
 
