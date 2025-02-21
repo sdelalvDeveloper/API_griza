@@ -155,7 +155,7 @@ Vamos a intentar acceder introduciendo mal la constraseña: correcta(123) - inco
 ![Login_incorrecto](assets/respuesta_login_pepe_incorrecto.png)
 
 Ahora introducimos la contraseña correcta: 123.
-![Login_correcto](assets/intro_login_correcto.png)
+![Login_correcto](assets/intro_login_pepe.png)
 ![Login_correcto](assets/comprobar_pepe_login.png)
 
 ### Pruebas registro
