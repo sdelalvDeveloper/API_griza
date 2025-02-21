@@ -130,7 +130,7 @@ Es una interfaz que se encarga de las peticiones a nuestra api.
 ![Interface ApiService](assets/apiService.png)
 
 ### Clases para login
-Son las clases que usamos para mandar la petición del loginy para el *Response* del endpoint.
+Son las clases que usamos para mandar la petición del login y para el *Response* del endpoint correspondiente.
 ![Clases login](assets/clases_login.png)
 
 ### Clases para registro
