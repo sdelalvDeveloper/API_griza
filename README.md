@@ -116,4 +116,13 @@ Este documento representa las tareas asignadas a los usuarios.
 
 3. **Validación de entradas**:
    - Se valida que los datos entrantes sean correctos.
+  
+---
+
+## Pruebas gestión de usuarios
+
+### Retrofit
+Nuestro **Retrofit** contiene la url de nuestra api en render y nos devuelve un ApiService.
+![Object Retrofit](assets/retrofit.png)
+
 
