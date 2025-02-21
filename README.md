@@ -142,8 +142,8 @@ Primero comprobamos nuestra base de datos que está vacía.
 ![BD](assets/comprobar_bd.png)
 
 Si intentamos loguearnos, lógicamente dará error.
-![Login_inexistente](assets/intro_login_correcto.png)
-![Login_inexistente](assets/respuesta_login_pepe_incorrecto.png)
+![Login_intro_inexistente](assets/intro_login_correcto.png)
+![Login_respuesta_inexistente](assets/respuesta_login_pepe_incorrecto.png)
 
 Por lo tanto, vamos a registrar un usuario de forma correcta para hacer las pruebas del login. Después probaremos los errores del registro.
 ![Intro_user](assets/intro_registro_correcto.png)
