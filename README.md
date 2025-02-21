@@ -138,7 +138,7 @@ Son las clases que usamos para mandar la petición del registro y para el *Respo
 ![Clases login](assets/clases_registro.png)
 
 ### Pruebas login
-Primero comprobamos nuestra base de datos que está vacía.
+Primero comprobamos que nuestra base de datos está vacía.
 ![BD](assets/comprobar_bd.png)
 
 Si intentamos loguearnos, lógicamente dará error ya que no existe ningún usuario registrado.
