@@ -141,7 +141,7 @@ Son las clases que usamos para mandar la petición del registro y para el *Respo
 Primero comprobamos nuestra base de datos que está vacía.
 ![BD](assets/comprobar_bd.png)
 
-Si intentamos loguearnos, lógicamente dará error.
+Si intentamos loguearnos, lógicamente dará error ya que no existe ningún usuario registrado.
 ![Login_intro_inexistente](assets/intro_login_pepe.png)
 ![Login_respuesta_inexistente](assets/respuesta_login_pepe_incorrecto.png)
 
