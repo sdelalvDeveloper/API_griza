@@ -1,4 +1,4 @@
-# Descripción de la API
+ # Descripción de la API
 
 Este proyecto consiste en una API que maneja tres documentos principales: **Usuario**, **Dirección** y **Tareas**. A continuación, se detallan cada uno de los documentos y sus respectivos campos.
 
@@ -136,4 +136,17 @@ Son las clases que usamos para mandar la petición del loginy para el *Response*
 ### Clases para registro
 Son las clases que usamos para mandar la petición del registro y para el *Response* del endpoint.
 ![Clases login](assets/clases_registro.png)
+
+### Pruebas login
+Primero comprobamos nuestra base de datos que está vacía.
+![BD](assets/comprobar_bd.png)
+
+Si intentamos loguearnos, lógicamente dará error.
+![Login_inexistente](assets/intro_login_correcto.png)
+![Login_inexistente](assets/respuesta_login_pepe_incorrecto.png)
+
+Por lo tanto, vamos a registrar un usuario de forma correcta para hacer las pruebas del login. Después probaremos los errores del registro.
+![Intro_user](assets/intro_registro_correcto.png)
+![Respuesta_registro](assets/respuesta_registro_correcto.png)
+
 
