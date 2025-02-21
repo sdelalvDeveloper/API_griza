@@ -158,6 +158,8 @@ Ahora introducimos la contraseña correcta: 123.
 ![Login_correcto](assets/intro_login_pepe.png)
 ![Login_correcto](assets/comprobar_pepe_login.png)
 
+---
+
 ### Pruebas registro
 
 Ya hemos introducido un usuario **pepe**.
