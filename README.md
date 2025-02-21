@@ -171,11 +171,11 @@ Vamos a introducir un nuevo usuario para probar otros errores, en esta ocasión 
 ![Registro_incorrecto](assets/intro_registro_provincia.png)
 ![Registro_repetido](assets/respuesta_insert_provincia.png)
 
-Repetimos la acción, ahora con el error en el **Municipio**.
+Repetimos la misma acción, pero esta vez vamos a provocar que el error se produzca en el **Municipio**.
 ![Registro_repetido](assets/intro_registro_municipio.png)
 ![Registro_repetido](assets/respuesta_insert_municipio2.png)
 
-Por último, intentamos registrar al nuevo usuario con los datos correctos.
+Por último, intentamos registrar al nuevo usuario que tenga guerra nos ha dado, ahora si, con los datos correctos.
 ![Registro_correcto](assets/intro_registro_municipio_correcto.png)
 ![Registro_correcto](assets/respuesta_registro_municipio_correcto.png)
 
