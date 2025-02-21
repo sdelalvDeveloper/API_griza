@@ -9,6 +9,7 @@ import com.es.API_REST_SEGURA.util.DtoMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -23,6 +24,8 @@ class UsuarioService() : UserDetailsService {
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
+    @Autowired
+    private lateinit var apiService: ExternalApiService
 
     override fun loadUserByUsername(username: String?): UserDetails {
         val usuario: Usuario = usuarioRepository
@@ -30,20 +33,25 @@ class UsuarioService() : UserDetailsService {
             .orElseThrow() {
                 NotFoundException("$username no existe.")
             }
+        val roles = usuario.roles?.split("," )?.map { SimpleGrantedAuthority ("ROLE_$it" ) }?.toList() ?: listOf()
 
         return User.builder()
             .username(usuario.username)
             .password(usuario.password)
-            .roles(usuario.roles)
+            .authorities(roles)
             .build( )
     }
 
-    fun insertUser(usuarioInsertadoDTO: UsuarioRegisterDTO) : Usuario? {
+    fun insertUser(usuarioRegisterDTO: UsuarioRegisterDTO) : Usuario? {
         val dtoMapper = DtoMapper()
 
-        val usuarioExist = usuarioInsertadoDTO.let { usuarioRepository.findByUsername(it.username) }
+        val usuarioExist = usuarioRegisterDTO.let { usuarioRepository.findByUsername(it.username) }
 
-        /*
+        if (usuarioRegisterDTO.password != usuarioRegisterDTO.passwordRepeat) {
+            throw BadRequestException("La contraseña no coincide")
+        }
+
+        val usuario = dtoMapper.userDTOToEntity(usuarioRegisterDTO)
         val datosProvincias = apiService.obtenerDatosProvincias()
 
         if (datosProvincias?.data != null) {
@@ -54,16 +62,9 @@ class UsuarioService() : UserDetailsService {
             }
         }
 
-         */
-
-        if (usuarioInsertadoDTO.password != usuarioInsertadoDTO.passwordRepeat) {
-            throw BadRequestException("La contraseña no coincide")
-        }
-
         if (usuarioExist.isPresent){
-            throw BadRequestException("Usuario ${usuarioInsertadoDTO.username} ya existe")
+            throw BadRequestException("Usuario ${usuarioRegisterDTO.username} ya existe")
         } else {
-            val usuario = dtoMapper.userDTOToEntity(usuarioInsertadoDTO)
             usuario.password = passwordEncoder.encode(usuario.password)
             usuarioRepository.save(usuario)
             return usuario

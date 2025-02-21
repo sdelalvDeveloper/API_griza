@@ -35,9 +35,9 @@ class TareaController {
 
     @DeleteMapping("/{titulo}")
     fun deleteTarea(httpRequest: HttpServletRequest,
-                    @PathVariable titulo: String
+                    @RequestBody tarea: Tarea
     ): ResponseEntity<Tarea> {
-        val tareaEliminada = tareaService.deleteTareaByTitulo(titulo)
+        val tareaEliminada = tareaService.deleteTareaByTitulo(tarea)
 
         return ResponseEntity(tareaEliminada, HttpStatus.NO_CONTENT)
     }

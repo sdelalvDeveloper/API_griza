@@ -32,12 +32,9 @@ class TareaService {
         return tareaRepository.save(tareaConUsuario)
     }
 
-    fun deleteTareaByTitulo(titulo: String): Tarea {
+    fun deleteTareaByTitulo(tarea: Tarea): Tarea {
         val authentication = SecurityContextHolder.getContext().authentication
         val usernameAuth = (authentication.principal as UserDetails).username
-
-        val tarea = tareaRepository.findByTitle(titulo)
-            .orElseThrow() { NotFoundException("La tarea $titulo no existe.")}
 
         // Verificar que la tarea pertenece al usuario autenticado
         if (tarea.username != usernameAuth) {
@@ -50,20 +47,21 @@ class TareaService {
     }
 
     fun cambiarEstadoTarea(tarea: Tarea): Tarea {
-        // 1️⃣ Obtener el usuario autenticado desde el token JWT
+        // Obtener el usuario autenticado desde el token JWT
         val authentication = SecurityContextHolder.getContext().authentication
         val usernameAuth = (authentication.principal as UserDetails).username
+        val rolAuth = (authentication.principal as UserDetails).authorities.map { it.authority }
 
-        // 3️⃣ Verificar que la tarea pertenece al usuario autenticado
-        if (tarea.username != usernameAuth) {
+        // Verificar que la tarea pertenece al usuario autenticado
+        if (tarea.username != usernameAuth || !rolAuth.contains("ADMIN")) {
             throw UnauthorizedException("No puedes modificar tareas de otro usuario.")
         }
 
         if (tarea.estado == Estado.PENDIENTE) {
             tarea.estado = Estado.COMPLETADA
 
-            tareaRepository.save(tarea)
         }
+        tareaRepository.save(tarea)
         return tarea
     }
 
