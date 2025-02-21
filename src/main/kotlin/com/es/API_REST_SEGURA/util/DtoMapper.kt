@@ -11,6 +11,7 @@ class DtoMapper {
             usuario.calle,
             usuario.num,
             usuario.provincia,
+            usuario.municipio,
             usuario.cp
         )
         val usuarioMapeado =

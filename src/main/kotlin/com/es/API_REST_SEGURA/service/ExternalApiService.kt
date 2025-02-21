@@ -24,7 +24,7 @@ class ExternalApiService(private val webClient: WebClient.Builder) {
     fun obtenerDatosMunicipios(CPRO: String): DatosMunicipios? {
         return webClient.build()
             .get()
-            .uri("https://apiv1.geoapi.es/municipios?CPRO=${CPRO}type=JSON&key=$apiKey")
+            .uri("https://apiv1.geoapi.es/municipios?CPRO=${CPRO}&type=JSON&key=$apiKey")
             .retrieve()
             .bodyToMono(DatosMunicipios::class.java)
             .block()
