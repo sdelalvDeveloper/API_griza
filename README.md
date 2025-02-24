@@ -145,7 +145,7 @@ Si intentamos loguearnos, lógicamente dará error ya que no existe ningún usua
 ![Login_intro_inexistente](assets/intro_login_pepe.png)
 ![Login_respuesta_inexistente](assets/respuesta_login_pepe_incorrecto.png)
 
-Por lo tanto, vamos a registrar un usuario de forma correcta para hacer las pruebas del login. Después probaremos los errores del registro.
+Vamos a registrar un usuario de forma correcta para hacer las pruebas del login. Después probaremos los errores del registro.
 ![Intro_user](assets/intro_registro_correcto.png)
 ![Respuesta_registro](assets/respuesta_registro_correcto.png)
 
