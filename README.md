@@ -130,7 +130,7 @@ Es una interfaz que se encarga de las peticiones a nuestra api.
 ![Interface ApiService](assets/apiService.png)
 
 ### Clases para login
-Son las clases que usamos para mandar la petición del loginy para el *Response* del endpoint.
+Son las clases que usamos para mandar la petición del login y para el *Response* del endpoint correspondiente.
 ![Clases login](assets/clases_login.png)
 
 ### Clases para registro
@@ -138,14 +138,14 @@ Son las clases que usamos para mandar la petición del registro y para el *Respo
 ![Clases login](assets/clases_registro.png)
 
 ### Pruebas login
-Primero comprobamos nuestra base de datos que está vacía.
+Primero comprobamos que nuestra base de datos está vacía.
 ![BD](assets/comprobar_bd.png)
 
-Si intentamos loguearnos, lógicamente dará error.
+Si intentamos loguearnos, lógicamente dará error ya que no existe ningún usuario registrado.
 ![Login_intro_inexistente](assets/intro_login_pepe.png)
 ![Login_respuesta_inexistente](assets/respuesta_login_pepe_incorrecto.png)
 
-Por lo tanto, vamos a registrar un usuario de forma correcta para hacer las pruebas del login. Después probaremos los errores del registro.
+Vamos a registrar un usuario de forma correcta para hacer las pruebas del login. Después probaremos los errores del registro.
 ![Intro_user](assets/intro_registro_correcto.png)
 ![Respuesta_registro](assets/respuesta_registro_correcto.png)
 
@@ -154,9 +154,11 @@ Vamos a intentar acceder introduciendo mal la constraseña: correcta(123) - inco
 ![Login_incorrecto](assets/intro_login_pepe_incorrecto.png)
 ![Login_incorrecto](assets/respuesta_login_pepe_incorrecto.png)
 
-Ahora introducimos la contraseña correcta: 123.
-![Login_correcto](assets/intro_login_correcto.png)
+Para comprobar un login correcto, introducimos la contraseña correcta del mismo usuario: Contraseña -> 123.
+![Login_correcto](assets/intro_login_pepe.png)
 ![Login_correcto](assets/comprobar_pepe_login.png)
+
+---
 
 ### Pruebas registro
 
@@ -165,15 +167,15 @@ Vamos a intentar introducir otro con el mismo nombre de usuario.
 ![Registro_repetido](assets/intro_registro_repetido.png)
 ![Registro_repetido](assets/respuesta_insert_repetido.png)
 
-Ahora, vamos a introducir un nuevo usuario, pero con un error en la **Provincia**.
+Vamos a introducir un nuevo usuario para probar otros errores, en esta ocasión con la **Provincia**.
 ![Registro_incorrecto](assets/intro_registro_provincia.png)
 ![Registro_repetido](assets/respuesta_insert_provincia.png)
 
-Repetimos la acción, ahora con el error en el **Municipio**.
+Repetimos la misma acción, pero esta vez vamos a provocar que el error se produzca en el **Municipio**.
 ![Registro_repetido](assets/intro_registro_municipio.png)
 ![Registro_repetido](assets/respuesta_insert_municipio2.png)
 
-Por último, intentamos registrar al nuevo usuario con los datos correctos.
+Por último, intentamos registrar al nuevo usuario que tenga guerra nos ha dado, ahora si, con los datos correctos.
 ![Registro_correcto](assets/intro_registro_municipio_correcto.png)
 ![Registro_correcto](assets/respuesta_registro_municipio_correcto.png)
 
