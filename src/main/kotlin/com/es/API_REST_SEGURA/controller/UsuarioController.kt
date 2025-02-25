@@ -65,8 +65,8 @@ class UsuarioController {
     }
 
     @DeleteMapping("/{username}")
-    fun deleteUser(httpRequest: HttpServletRequest, @PathVariable username: String): ResponseEntity<Any>? {
-        val usuarioEliminado = usuarioService.deleteUserByUsername(username)
+    fun deleteUser(httpRequest: HttpServletRequest, @PathVariable username: String, authentication: Authentication): ResponseEntity<Any>? {
+        val usuarioEliminado = usuarioService.deleteUserByUsername(username, authentication)
 
         return ResponseEntity(usuarioEliminado, HttpStatus.NO_CONTENT)
     }

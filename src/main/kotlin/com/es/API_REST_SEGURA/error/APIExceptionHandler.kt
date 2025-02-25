@@ -1,6 +1,7 @@
 package com.es.API_REST_SEGURA.error
 
 import com.es.API_REST_SEGURA.error.exception.BadRequestException
+import com.es.API_REST_SEGURA.error.exception.ForbiddenException
 import com.es.API_REST_SEGURA.error.exception.NotFoundException
 import com.es.API_REST_SEGURA.error.exception.UnauthorizedException
 import jakarta.servlet.http.HttpServletRequest
@@ -13,6 +14,14 @@ import javax.naming.AuthenticationException
 
 @ControllerAdvice
 class APIExceptionHandler {
+
+    @ExceptionHandler(ForbiddenException::class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    fun handleForbidden(request: HttpServletRequest, e: Exception) : ErrorRespuesta {
+        e.printStackTrace()
+        return ErrorRespuesta(e.message!!, request.requestURI)
+    }
 
     @ExceptionHandler(NotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

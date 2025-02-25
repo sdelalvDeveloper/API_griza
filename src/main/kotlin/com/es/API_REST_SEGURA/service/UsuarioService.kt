@@ -3,12 +3,14 @@ package com.es.API_REST_SEGURA.service
 import com.es.API_REST_SEGURA.dto.UsuarioRegisterDTO
 import com.es.API_REST_SEGURA.error.exception.BadRequestException
 import com.es.API_REST_SEGURA.error.exception.NotFoundException
+import com.es.API_REST_SEGURA.error.exception.UnauthorizedException
 import com.es.API_REST_SEGURA.model.Usuario
 import com.es.API_REST_SEGURA.repository.UsuarioRepository
 import com.es.API_REST_SEGURA.util.DtoMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
@@ -54,7 +56,6 @@ class UsuarioService() : UserDetailsService {
         val usuario = dtoMapper.userDTOToEntity(usuarioRegisterDTO)
         val datosProvincias = apiService.obtenerDatosProvincias()
 
-
         val provinciaValida = datosProvincias?.data?.stream()?.filter {
             it.PRO == (usuario.direccion?.provincia?.uppercase() ?: "")
         }?.findFirst()?.orElseThrow {
@@ -68,7 +69,7 @@ class UsuarioService() : UserDetailsService {
                 it.DMUN50 == (usuario.direccion?.municipio?.uppercase() ?: "") &&
                         it.CPRO == provinciaValida.CPRO
             }.findFirst().orElseThrow {
-                NotFoundException("Municipio ${usuario.direccion?.municipio?.uppercase()} no válida")
+                NotFoundException("Municipio ${usuario.direccion?.municipio?.uppercase()} no válido")
             }
         }
 
@@ -81,13 +82,16 @@ class UsuarioService() : UserDetailsService {
         }
     }
 
-    fun deleteUserByUsername(username: String): ResponseEntity<Usuario>{
+    fun deleteUserByUsername(username: String, authentication: Authentication): ResponseEntity<Usuario> {
         val usuarioRegistrado: Usuario = usuarioRepository
             .findByUsername(username)
-            .orElseThrow() { NotFoundException("$username no existe.") }
-
-        usuarioRepository.delete(usuarioRegistrado)
-
+            .orElseThrow { NotFoundException("$username no existe.") }
+        if (authentication.name == username || authentication.authorities.any { it.authority == "ROLE_ADMIN" }) {
+            usuarioRepository.delete(usuarioRegistrado)
+        } else {
+            throw UnauthorizedException("No tiene permiso para eliminar otro usuario")
+        }
         return ResponseEntity(usuarioRegistrado, HttpStatus.OK)
     }
+
 }
