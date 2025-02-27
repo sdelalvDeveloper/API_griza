@@ -188,6 +188,7 @@ Primero mostramos los dos tipos de usuarios en nuestra base de datos: USER y ADM
 
 ## Pruebas USER
 Nuestro usuario **jose** va a obtener sus tareas.
+![Usuarios](assets/obtener_tarea_user.png)
 
 Marcar una tarea como COMPLETADA por **jose**.
 ![Usuarios](assets/user_tarea_completada.png)
