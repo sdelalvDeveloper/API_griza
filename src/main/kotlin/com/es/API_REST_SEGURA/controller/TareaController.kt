@@ -29,8 +29,11 @@ class TareaController {
     }
 
     @GetMapping("/getAll")
-    fun getAllTareas(httpRequest: HttpServletRequest, authentication: Authentication): ResponseEntity<List<TareaDTO>>? {
+    fun getAllTareas(httpRequest: HttpServletRequest,
+                     authentication: Authentication
+    ): ResponseEntity<List<TareaDTO>>? {
         val tareas = tareaService.getAll()
+
         return ResponseEntity(tareas, HttpStatus.OK)
     }
 
