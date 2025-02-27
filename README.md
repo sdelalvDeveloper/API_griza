@@ -160,7 +160,7 @@ Para comprobar un login correcto, introducimos la contraseña correcta del mismo
 
 ---
 
-### Pruebas registro
+## Pruebas registro
 
 Ya hemos introducido un usuario **pepe**.
 Vamos a intentar introducir otro con el mismo nombre de usuario.
@@ -178,6 +178,32 @@ Repetimos la misma acción, pero esta vez vamos a provocar que el error se produ
 Por último, intentamos registrar al nuevo usuario que tenga guerra nos ha dado, ahora si, con los datos correctos.
 ![Registro_correcto](assets/intro_registro_municipio_correcto.png)
 ![Registro_correcto](assets/respuesta_registro_municipio_correcto.png)
+
+---
+
+## Pruebas tareas
+
+Primero mostramos los dos tipos de usuarios en nuestra base de datos: USER y ADMIN.
+![Usuarios](assets/users.png)
+
+## Pruebas USER
+Nuestro usuario **jose** va a obtener sus tareas.
+![Usuarios](assets/obtener_tarea_user.png)
+
+Marcar una tarea como COMPLETADA por **jose**.
+![Usuarios](assets/user_tarea_completada.png)
+
+Eliminar una tarea propia.
+![Usuarios](assets/user_borrar_tarea.png)
+
+Eliminar una tarea de otro usuario.
+![Usuarios](assets/borrar_tarea_user_otro_user.png)
+
+Dar de alta una tarea para sí mismo.
+![Usuarios](assets/tarea_registrada_user.png)
+
+Dar de alta una tarea para otro usuario.
+![Usuarios](assets/user_tarea_user.png)
 
 
 
