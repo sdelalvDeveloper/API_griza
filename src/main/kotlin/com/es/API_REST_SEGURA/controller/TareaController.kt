@@ -58,7 +58,7 @@ class TareaController {
         return ResponseEntity.noContent().build()
     }
 
-    @PutMapping("/tareas/{titulo}/cambiar-estado")
+    @PutMapping("/{titulo}/cambiar-estado")
     fun cambiarEstadoTarea(
         @PathVariable titulo: String,
         @RequestBody nuevoEstado: Estado, // Nuevo estado (COMPLETADA o PENDIENTE)
