@@ -57,19 +57,19 @@ class UsuarioService() : UserDetailsService {
         val datosProvincias = apiService.obtenerDatosProvincias()
 
         val provinciaValida = datosProvincias?.data?.stream()?.filter {
-            it.PRO == (usuario.direccion?.provincia?.uppercase() ?: "")
+            it.PRO == (usuario.direccion.provincia.uppercase() ?: "")
         }?.findFirst()?.orElseThrow {
-            NotFoundException("Provincia ${usuario.direccion?.provincia?.uppercase()} no válida")
+            NotFoundException("Provincia ${usuario.direccion.provincia.uppercase()} no válida")
         }
 
         val datosMunicipios = provinciaValida?.let { apiService.obtenerDatosMunicipios(it.CPRO) }
 
         if (datosMunicipios?.data != null) {
             datosMunicipios.data.stream().filter {
-                it.DMUN50 == (usuario.direccion?.municipio?.uppercase() ?: "") &&
+                it.DMUN50 == (usuario.direccion.municipio.uppercase() ?: "") &&
                         it.CPRO == provinciaValida.CPRO
             }.findFirst().orElseThrow {
-                NotFoundException("Municipio ${usuario.direccion?.municipio?.uppercase()} no válido")
+                NotFoundException("Municipio ${usuario.direccion.municipio.uppercase()} no válido")
             }
         }
 
