@@ -186,8 +186,9 @@ Por último, intentamos registrar al nuevo usuario que tenga guerra nos ha dado,
 Primero mostramos los dos tipos de usuarios en nuestra base de datos: USER y ADMIN.
 ![Usuarios](assets/users.png)
 
-## Pruebas USER
-Nuestro usuario **jose** va a obtener sus tareas.
+### Pruebas USER
+Nuestro usuario **jose** es **USER**.
+Obtener sus tareas.
 ![Usuarios](assets/obtener_tarea_user.png)
 
 Marcar una tarea como COMPLETADA por **jose**.
@@ -204,6 +205,17 @@ Dar de alta una tarea para sí mismo.
 
 Dar de alta una tarea para otro usuario.
 ![Usuarios](assets/user_tarea_user.png)
+
+### Pruebas ADMIN
+Nuestro usuario **sebas** es **ADMIN**.
+Obtener todas las tareas.
+![Usuarios](assets/todas_tareas_admin.png)
+
+Eliminar cualquier tarea.
+![Usuarios](assets/admin_borra_tarea_user.png)
+
+Dar de alta tarea para cualquier usuario.
+![Usuarios](assets/admin_registra_tarea_user.png)
 
 
 
