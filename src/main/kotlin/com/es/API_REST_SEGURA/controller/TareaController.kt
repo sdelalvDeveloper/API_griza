@@ -2,6 +2,7 @@ package com.es.API_REST_SEGURA.controller
 
 import com.es.API_REST_SEGURA.dto.TareaDTO
 import com.es.API_REST_SEGURA.dto.TareaRegisterDTO
+import com.es.API_REST_SEGURA.model.Estado
 import com.es.API_REST_SEGURA.model.Tarea
 import com.es.API_REST_SEGURA.service.TareaService
 import jakarta.servlet.http.HttpServletRequest
@@ -57,13 +58,13 @@ class TareaController {
         return ResponseEntity.noContent().build()
     }
 
-    @PutMapping("/estado/{titulo}")
-    fun cambiarEstadoTarea(httpRequest: HttpServletRequest,
-                           @PathVariable titulo: String,
-                           authentication: Authentication
+    @PutMapping("/tareas/{titulo}/cambiar-estado")
+    fun cambiarEstadoTarea(
+        @PathVariable titulo: String,
+        @RequestBody nuevoEstado: Estado, // Nuevo estado (COMPLETADA o PENDIENTE)
+        authentication: Authentication
     ): ResponseEntity<Tarea> {
-        val tareaCompletada = tareaService.cambiarEstadoTarea(titulo, authentication)
-
-        return ResponseEntity(tareaCompletada, HttpStatus.OK)
+        val tareaActualizada = tareaService.cambiarEstadoTarea(titulo, nuevoEstado, authentication)
+        return ResponseEntity(tareaActualizada, HttpStatus.OK)
     }
 }
