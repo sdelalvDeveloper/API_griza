@@ -12,6 +12,6 @@ data class Usuario(
     var password: String,
     val email: String,
     val telefono: String,
-    val direccion: Direccion,
+    val direccion: Direccion?,
     val roles: String? = "USER"
 )
