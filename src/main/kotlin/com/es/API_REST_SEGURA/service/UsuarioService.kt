@@ -44,7 +44,7 @@ class UsuarioService() : UserDetailsService {
             .build( )
     }
 
-    fun insertUser(usuarioRegisterDTO: UsuarioRegisterDTO) : Usuario? {
+    fun insertUser(usuarioRegisterDTO: UsuarioRegisterDTO): Usuario? {
         val dtoMapper = DtoMapper()
 
         val usuarioExist = usuarioRegisterDTO.let { usuarioRepository.findByUsername(it.username) }

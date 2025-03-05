@@ -11,7 +11,7 @@ import com.es.API_REST_SEGURA.model.Usuario
 
 class DtoMapper {
 
-    fun userDTOToEntity(usuario: UsuarioRegisterDTO) : Usuario {
+    fun userDTOToEntity(usuario: UsuarioRegisterDTO): Usuario {
         val direccion = Direccion(
             usuario.calle,
             usuario.num,
