@@ -64,11 +64,15 @@ class TareaService {
         }
     }
 
-    fun cambiarEstadoTarea(titulo: String, estado: Estado, authentication: Authentication): Tarea? {
+    fun cambiarEstadoTarea(titulo: String, estado: String, authentication: Authentication): Tarea? {
         val tarea = tareaRepository.getTareaByTitulo(titulo.lowercase())
         if (tarea != null) {
             if (authentication.name == tarea.username || authentication.authorities.any {it.authority == "ROLE_ADMIN"}) {
-                tarea.estado = estado
+                if (estado == "completada") {
+                    tarea.estado = Estado.COMPLETADA
+                } else {
+                    tarea.estado = Estado.PENDIENTE
+                }
                 return tareaRepository.save(tarea)
             } else {
                 throw ForbiddenException("No puedes modificar tareas de otro usuario.")

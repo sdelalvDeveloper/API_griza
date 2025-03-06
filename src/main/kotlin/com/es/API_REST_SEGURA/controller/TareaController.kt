@@ -61,7 +61,7 @@ class TareaController {
     @PutMapping("/{titulo}/cambiar-estado")
     fun cambiarEstadoTarea(
         @PathVariable titulo: String,
-        @RequestBody nuevoEstado: Estado, // Nuevo estado (COMPLETADA o PENDIENTE)
+        @RequestBody nuevoEstado: String, // Nuevo estado (COMPLETADA o PENDIENTE)
         authentication: Authentication
     ): ResponseEntity<Tarea> {
         val tareaActualizada = tareaService.cambiarEstadoTarea(titulo, nuevoEstado, authentication)
