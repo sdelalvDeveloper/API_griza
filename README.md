@@ -222,7 +222,6 @@ Dar de alta tarea para cualquier usuario.
 ## PRUEBAS SOBRE LA INTERFAZ + VIDEO
 En la entrega de la tarea se adjunta el video donde se realizan las pruebas sobre el usuario y las tareas.
 
-
 Estos son las peticiones que realiza la aplicación donde se incluye el token del usuario una vez logueado y que posteriormente veremos como lo almacenamos:
 ![peticiones_tareas.png](assets/peticiones_tareas.png)
 
