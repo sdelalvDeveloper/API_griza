@@ -42,7 +42,7 @@ class TareaController {
     fun insertTarea(httpRequest: HttpServletRequest,
                     @RequestBody tarea: TareaRegisterDTO,
                     authentication: Authentication
-    ): ResponseEntity<Tarea>? {
+    ): ResponseEntity<TareaDTO>? {
         val tareaRegistrada = tareaService.insertTarea(tarea, authentication)
 
         return ResponseEntity(tareaRegistrada, HttpStatus.CREATED)
@@ -52,7 +52,7 @@ class TareaController {
     fun deleteTarea(httpRequest: HttpServletRequest,
                     @PathVariable titulo: String,
                     authentication: Authentication
-    ): ResponseEntity<Tarea> {
+    ): ResponseEntity<TareaDTO> {
         tareaService.deleteTareaByTitulo(titulo, authentication)
 
         return ResponseEntity.noContent().build()
@@ -63,7 +63,7 @@ class TareaController {
         @PathVariable titulo: String,
         @RequestBody nuevoEstado: String, // Nuevo estado (COMPLETADA o PENDIENTE)
         authentication: Authentication
-    ): ResponseEntity<Tarea> {
+    ): ResponseEntity<TareaDTO> {
         val tareaActualizada = tareaService.cambiarEstadoTarea(titulo, nuevoEstado, authentication)
         return ResponseEntity(tareaActualizada, HttpStatus.OK)
     }

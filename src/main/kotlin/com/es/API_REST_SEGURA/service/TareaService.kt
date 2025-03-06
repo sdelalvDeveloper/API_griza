@@ -5,7 +5,6 @@ import com.es.API_REST_SEGURA.dto.TareaRegisterDTO
 import com.es.API_REST_SEGURA.error.exception.ForbiddenException
 import com.es.API_REST_SEGURA.error.exception.NotFoundException
 import com.es.API_REST_SEGURA.model.Estado
-import com.es.API_REST_SEGURA.model.Tarea
 import com.es.API_REST_SEGURA.repository.TareaRepository
 import com.es.API_REST_SEGURA.util.DtoMapper
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,11 +40,12 @@ class TareaService {
         return tareas
     }
 
-    fun insertTarea(tarea: TareaRegisterDTO, authentication: Authentication): Tarea? {
-        val dtoMapper = DtoMapper()
+    fun insertTarea(tarea: TareaRegisterDTO, authentication: Authentication): TareaDTO? {
         if (authentication.name == tarea.username || authentication.authorities.any {it.authority == "ROLE_ADMIN"}) {
             val tareaRegister = dtoMapper.tareaDTOToEntity(tarea)
-            return tareaRepository.save(tareaRegister)
+            tareaRepository.save(tareaRegister)
+            val tareaRegistrada = dtoMapper.tareaEntityToDTO(tareaRegister)
+            return tareaRegistrada
         } else {
             throw ForbiddenException("No puede insertar ${tarea.titulo} para otro usuario.")
         }
@@ -64,7 +64,7 @@ class TareaService {
         }
     }
 
-    fun cambiarEstadoTarea(titulo: String, estado: String, authentication: Authentication): Tarea? {
+    fun cambiarEstadoTarea(titulo: String, estado: String, authentication: Authentication): TareaDTO? {
         val tarea = tareaRepository.getTareaByTitulo(titulo.lowercase())
         if (tarea != null) {
             if (authentication.name == tarea.username || authentication.authorities.any {it.authority == "ROLE_ADMIN"}) {
@@ -73,7 +73,9 @@ class TareaService {
                 } else {
                     tarea.estado = Estado.PENDIENTE
                 }
-                return tareaRepository.save(tarea)
+                tareaRepository.save(tarea)
+                val tareaActulizada = dtoMapper.tareaEntityToDTO(tarea)
+                return tareaActulizada
             } else {
                 throw ForbiddenException("No puedes modificar tareas de otro usuario.")
             }
