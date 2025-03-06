@@ -226,7 +226,6 @@ Estos son las peticiones que realiza la aplicación donde se incluye el token de
 ![peticiones_tareas.png](assets/peticiones_tareas.png)
 
 Cuando el usuario se autoriza en nuestra aplicación de forma correcta, almacenamos de forma local su username y token para usarlo posteriormente en las peticiones:
-![guardar_sesion.png](assets/guardar_sesion.png)
 
 Una vez autorizado el usuario, la aplicación navega automáticamente a la ventana de sus tareas, realizando la petición correspondiente con el token, cargando así únicamente las tareas de dicho usuario:
 ![cargar_tareas.png](assets/cargar_tareas.png)
