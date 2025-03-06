@@ -64,15 +64,11 @@ class TareaService {
         }
     }
 
-    fun cambiarEstadoTarea(titulo: String, estado: String, authentication: Authentication): TareaDTO? {
+    fun cambiarEstadoTarea(titulo: String, estado: Estado, authentication: Authentication): TareaDTO? {
         val tarea = tareaRepository.getTareaByTitulo(titulo.lowercase())
         if (tarea != null) {
             if (authentication.name == tarea.username || authentication.authorities.any {it.authority == "ROLE_ADMIN"}) {
-                if (estado == "completada") {
-                    tarea.estado = Estado.COMPLETADA
-                } else {
-                    tarea.estado = Estado.PENDIENTE
-                }
+                tarea.estado = estado
                 tareaRepository.save(tarea)
                 val tareaActulizada = dtoMapper.tareaEntityToDTO(tarea)
                 return tareaActulizada
