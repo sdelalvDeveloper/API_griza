@@ -20,15 +20,17 @@ class TareaService {
     private val dtoMapper = DtoMapper()
 
     fun getTareasByUsername(username: String, authentication: Authentication): List<TareaDTO> {
-        val tareas = tareaRepository.getTareas(username.lowercase()).map { tarea ->
+        var tareas = tareaRepository.getTareas(username.lowercase()).map { tarea ->
             dtoMapper.tareaEntityToDTO(tarea)
         }
-        if (authentication.name == username || authentication.authorities.any {it.authority == "ROLE_ADMIN"}) {
+        if (authentication.name == username) {
             if(tareas.isEmpty()){
                 throw ForbiddenException("No hay tareas para $username")
             } else {
                 return tareas
             }
+        } else if (authentication.authorities.any {it.authority == "ROLE_ADMIN"}) {
+            tareas = getAll()
         }
         return tareas
     }
