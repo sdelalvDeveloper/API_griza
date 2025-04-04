@@ -7,6 +7,9 @@ import com.es.API_REST_SEGURA.error.exception.UnauthorizedException
 import com.es.API_REST_SEGURA.model.Usuario
 import com.es.API_REST_SEGURA.repository.UsuarioRepository
 import com.es.API_REST_SEGURA.util.DtoMapper
+import com.es.API_REST_SEGURA.util.isLongPassword
+import com.es.API_REST_SEGURA.util.isValidEmail
+import com.es.API_REST_SEGURA.util.isValidPassword
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -25,9 +28,6 @@ class UsuarioService() : UserDetailsService {
     private lateinit var usuarioRepository: UsuarioRepository
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
-
-    @Autowired
-    private lateinit var apiService: ExternalApiService
 
     override fun loadUserByUsername(username: String?): UserDetails {
         val usuario: Usuario = usuarioRepository
@@ -49,37 +49,27 @@ class UsuarioService() : UserDetailsService {
 
         val usuarioExist = usuarioRegisterDTO.let { usuarioRepository.findByUsername(it.username) }
 
-        if (usuarioRegisterDTO.password != usuarioRegisterDTO.passwordRepeat) {
+        if (usuarioExist.isPresent){
+            throw BadRequestException("Usuario ${usuarioRegisterDTO.username} ya existe")
+        }
+
+        if (!isValidPassword(usuarioRegisterDTO.password, usuarioRegisterDTO.passwordRepeat)) {
             throw BadRequestException("La contraseña no coincide")
         }
 
+        if (!isLongPassword(usuarioRegisterDTO.password)) {
+            throw BadRequestException("La contraseña debe tener mínimo 6 caracteres")
+        }
+
+        if (!isValidEmail(usuarioRegisterDTO.email)) {
+            throw BadRequestException("Email inválido")
+        }
+
         val usuario = dtoMapper.userDTOToEntity(usuarioRegisterDTO)
-        val datosProvincias = apiService.obtenerDatosProvincias()
 
-        val provinciaValida = datosProvincias?.data?.stream()?.filter {
-            it.PRO == (usuario.direccion?.provincia?.uppercase() ?: "")
-        }?.findFirst()?.orElseThrow {
-            NotFoundException("Provincia ${usuario.direccion?.provincia?.uppercase()} no válida")
-        }
-
-        val datosMunicipios = provinciaValida?.let { apiService.obtenerDatosMunicipios(it.CPRO) }
-
-        if (datosMunicipios?.data != null) {
-            datosMunicipios.data.stream().filter {
-                it.DMUN50 == (usuario.direccion?.municipio?.uppercase() ?: "") &&
-                        it.CPRO == provinciaValida.CPRO
-            }.findFirst().orElseThrow {
-                NotFoundException("Municipio ${usuario.direccion?.municipio?.uppercase()} no válido")
-            }
-        }
-
-        if (usuarioExist.isPresent){
-            throw BadRequestException("Usuario ${usuarioRegisterDTO.username} ya existe")
-        } else {
-            usuario.password = passwordEncoder.encode(usuario.password)
-            usuarioRepository.save(usuario)
-            return usuario
-        }
+        usuario.password = passwordEncoder.encode(usuario.password)
+        usuarioRepository.save(usuario)
+        return usuario
     }
 
     fun deleteUserByUsername(username: String, authentication: Authentication): ResponseEntity<Usuario> {

@@ -1,32 +1,19 @@
 package com.es.API_REST_SEGURA.util
 
-import com.es.API_REST_SEGURA.dto.TareaDTO
-import com.es.API_REST_SEGURA.dto.TareaRegisterDTO
-import com.es.API_REST_SEGURA.dto.UsuarioDTO
-import com.es.API_REST_SEGURA.dto.UsuarioRegisterDTO
-import com.es.API_REST_SEGURA.model.Direccion
-import com.es.API_REST_SEGURA.model.Estado
-import com.es.API_REST_SEGURA.model.Tarea
-import com.es.API_REST_SEGURA.model.Usuario
+import com.es.API_REST_SEGURA.dto.*
+import com.es.API_REST_SEGURA.model.*
 
 class DtoMapper {
 
+     // Mapeo de usuarios
     fun userDTOToEntity(usuario: UsuarioRegisterDTO): Usuario {
-        val direccion = Direccion(
-            usuario.calle,
-            usuario.num,
-            usuario.provincia,
-            usuario.municipio,
-            usuario.cp
-        )
         val usuarioMapeado =
             Usuario(
                 null,
                 usuario.username.lowercase(),
                 usuario.password,
                 usuario.email,
-                usuario.telefono,
-                direccion
+                usuario.telefono
             )
         return usuarioMapeado
     }
@@ -42,25 +29,44 @@ class DtoMapper {
         return usuarioDTO
     }
 
-    fun tareaDTOToEntity(tarea: TareaRegisterDTO): Tarea {
-        val tareaRegistrar = Tarea(
+    // Mapeo de talleres
+    fun tallerDTOToEntity(taller: TallerRegisterDTO): Taller {
+        val tallerRegistrar = Taller(
             null,
-            tarea.username,
-            tarea.titulo.lowercase(),
-            tarea.descripcion,
-            Estado.PENDIENTE
+            taller.titulo.lowercase(),
+            taller.descripcion,
+            taller.fecha
         )
-        return tareaRegistrar
+        return tallerRegistrar
     }
 
-    fun tareaEntityToDTO(tarea: Tarea): TareaDTO {
-        val tareaDTO = TareaDTO(
-            tarea.username,
-            tarea.titulo,
-            tarea.descripcion,
-            tarea.estado
+    fun tallerEntityToDTO(taller: Taller): TallerDTO {
+        val tallerDTO = TallerDTO(
+            taller.titulo,
+            taller.descripcion,
+            taller.fecha,
+            taller.estado
         )
-        return tareaDTO
+        return tallerDTO
+    }
+
+    // Mapeo de reservas
+    fun reservaDTOToEntity(reserva: ReservaRegisterDTO): Reserva {
+        val reservaRegistrar = Reserva(
+            null,
+            reserva.username,
+            reserva.tallerID
+        )
+        return reservaRegistrar
+    }
+
+    fun reservaEntityToDTO(reserva: Reserva): ReservaDTO {
+        val reservaDTO = ReservaDTO(
+            reserva.username,
+            reserva.estado,
+            reserva.fecha
+        )
+        return reservaDTO
     }
 
 }
