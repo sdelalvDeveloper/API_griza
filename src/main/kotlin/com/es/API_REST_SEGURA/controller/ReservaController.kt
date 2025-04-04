@@ -1,8 +1,7 @@
 package com.es.API_REST_SEGURA.controller
 
 import com.es.API_REST_SEGURA.dto.ReservaDTO
-import com.es.API_REST_SEGURA.dto.TallerDTO
-import com.es.API_REST_SEGURA.dto.TallerRegisterDTO
+import com.es.API_REST_SEGURA.dto.ReservaRegisterDTO
 import com.es.API_REST_SEGURA.model.EstadoReserva
 import com.es.API_REST_SEGURA.service.ReservaService
 import jakarta.servlet.http.HttpServletRequest
@@ -41,9 +40,9 @@ class ReservaController {
 
     @PostMapping("/register")
     fun insertReserva(httpRequest: HttpServletRequest,
-                      @RequestBody reserva: TallerRegisterDTO,
+                      @RequestBody reserva: ReservaRegisterDTO,
                       authentication: Authentication
-    ): ResponseEntity<TallerDTO>? {
+    ): ResponseEntity<ReservaDTO>? {
         val reservaRegistrada = reservaService.insertReserva(reserva, authentication)
 
         return ResponseEntity(reservaRegistrada, HttpStatus.CREATED)
