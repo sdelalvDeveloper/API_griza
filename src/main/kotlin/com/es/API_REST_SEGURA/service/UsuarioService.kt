@@ -58,7 +58,7 @@ class UsuarioService() : UserDetailsService {
         }
 
         if (!isLongPassword(usuarioRegisterDTO.password)) {
-            throw BadRequestException("La contraseña debe tener mínimo 6 caracteres")
+            throw BadRequestException("La contraseña debe tener 6 caracteres")
         }
 
         if (!isValidEmail(usuarioRegisterDTO.email)) {
