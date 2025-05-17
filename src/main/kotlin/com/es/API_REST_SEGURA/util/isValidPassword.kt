@@ -5,5 +5,5 @@ fun isValidPassword(password: String, passwordRepeat: String): Boolean {
 }
 
 fun isLongPassword(password: String): Boolean {
-    return password.length >= 6
+    return password.length == 6
 }
