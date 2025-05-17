@@ -67,7 +67,7 @@ class UsuarioService() : UserDetailsService {
 
         val usuario = dtoMapper.userDTOToEntity(usuarioRegisterDTO)
 
-        //usuario.password = passwordEncoder.encode(usuario.password)
+        usuario.password = passwordEncoder.encode(usuario.password)
         usuarioRepository.save(usuario)
         return usuario
     }
