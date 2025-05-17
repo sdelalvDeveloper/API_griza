@@ -30,6 +30,7 @@ class UsuarioService() : UserDetailsService {
     private lateinit var passwordEncoder: PasswordEncoder
 
     override fun loadUserByUsername(username: String?): UserDetails {
+        println("Buscando usuario: $username")
         val usuario: Usuario = usuarioRepository
             .findByUsername(username!!)
             .orElseThrow() {
