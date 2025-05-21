@@ -129,7 +129,9 @@ class UsuarioService() : UserDetailsService {
             throw UnauthorizedException("La contraseña introducida no es correcta")
         }
 
-        return usuarioRepository.updateByUsername(usuario.username, usuarioExiste)
+        val usuarioActualizado = usuarioExiste.copy(password = password)
+
+        return usuarioRepository.updateByUsername(usuario.username, usuarioActualizado)
     }
 
 }
