@@ -10,4 +10,6 @@ interface TallerCustomRepository {
     fun getAll(): List<Taller>
 
     fun getTallerById(id: ObjectId): Taller?
+
+    fun updateTaller(id: ObjectId, nuevoTaller: Taller): Boolean
 }

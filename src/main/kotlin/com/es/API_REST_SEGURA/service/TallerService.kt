@@ -5,6 +5,8 @@ import com.es.API_REST_SEGURA.dto.TallerRegisterDTO
 import com.es.API_REST_SEGURA.error.exception.ForbiddenException
 import com.es.API_REST_SEGURA.error.exception.NotFoundException
 import com.es.API_REST_SEGURA.model.EstadoTaller
+import com.es.API_REST_SEGURA.model.Reserva
+import com.es.API_REST_SEGURA.model.Taller
 import com.es.API_REST_SEGURA.repository.TallerRepository
 import com.es.API_REST_SEGURA.util.DtoMapper
 import org.bson.types.ObjectId
@@ -20,23 +22,13 @@ class TallerService {
 
     private val dtoMapper = DtoMapper()
 
-    fun getTallerByUsername(username: String, authentication: Authentication): List<TallerDTO> {
-        var talleres = tallerRepository.getTalleresByUsername(username.lowercase()).map { taller ->
-            dtoMapper.tallerEntityToDTO(taller)
-        }
+    fun getTallerById(id: ObjectId): Taller {
+        val taller = tallerRepository.getTallerById(id)
+            ?: throw RuntimeException("Taller no encontrado con id: $id")
 
-        if (authentication.authorities.any {it.authority == "ROLE_ADMIN"}) {
-            talleres = getAll()
-        } else if (authentication.name == username) {
-            if(talleres.isEmpty()){
-                throw ForbiddenException("No hay talleres para $username")
-            } else {
-                return talleres
-            }
-        }
-
-        return talleres
+        return taller
     }
+
 
     fun getAll(): List<TallerDTO> {
         val talleres = tallerRepository.getAll().map { tarea ->
@@ -45,16 +37,12 @@ class TallerService {
         return talleres
     }
 
-    fun insertTaller(taller: TallerRegisterDTO, authentication: Authentication): TallerDTO? {
-        if (authentication.authorities.any {it.authority == "ROLE_ADMIN"}) {
-            val tallerRegister = dtoMapper.tallerDTOToEntity(taller)
-            tallerRepository.save(tallerRegister)
-            val tallerRegistrado = dtoMapper.tallerEntityToDTO(tallerRegister)
-            return tallerRegistrado
-        } else {
-            throw ForbiddenException("No se pudo insertar ${taller.titulo}.")
-        }
+    fun insertTaller(taller: TallerRegisterDTO): TallerDTO {
+        val tallerRegister = dtoMapper.tallerRegisterDTOToEntity(taller)
+        tallerRepository.save(tallerRegister)
+        return dtoMapper.tallerEntityToDTO(tallerRegister)
     }
+
 
     fun deleteTallerById(id: ObjectId, authentication: Authentication) {
         val taller = tallerRepository.getTallerById(id)
@@ -69,20 +57,12 @@ class TallerService {
         }
     }
 
-    fun cambiarEstadoTaller(id: ObjectId, estado: EstadoTaller, authentication: Authentication): TallerDTO? {
-        val taller = tallerRepository.getTallerById(id)
-        if (taller != null) {
-            if (authentication.authorities.any {it.authority == "ROLE_ADMIN"}) {
-                taller.estado = estado
-                tallerRepository.save(taller)
-                val tallerActualizado = dtoMapper.tallerEntityToDTO(taller)
-                return tallerActualizado
-            } else {
-                throw ForbiddenException("No puedes modificar tareas de otro usuario.")
-            }
-        } else {
-            throw NotFoundException("No se ha encontrado ninguna tarea con este id: $id")
-        }
+    fun updateTaller(id: ObjectId, nuevoTaller: Taller): Boolean {
+        return tallerRepository.updateTaller(id, nuevoTaller)
+    }
+
+    fun cambiarEstadoTaller(plazas: Int): EstadoTaller {
+        return if (plazas == 0) EstadoTaller.COMPLETO else EstadoTaller.DISPONIBLE
     }
 
 }

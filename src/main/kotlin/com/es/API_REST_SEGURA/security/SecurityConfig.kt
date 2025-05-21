@@ -39,11 +39,11 @@ class SecurityConfig {
             .authorizeHttpRequests { auth -> auth
                 .requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/usuarios/register").permitAll()
-                .requestMatchers(HttpMethod.GET,"/tareas/{username}").authenticated()
-                .requestMatchers(HttpMethod.GET,"/tareas/getAll").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST,"/tareas/register").authenticated()
-                .requestMatchers(HttpMethod.PUT,"/tareas/estado").authenticated()
-                .requestMatchers(HttpMethod.DELETE,"/tareas/{titulo}").authenticated()
+                .requestMatchers(HttpMethod.GET,"/talleres/{username}").authenticated()
+                .requestMatchers(HttpMethod.GET,"/talleres/getAll").authenticated()
+                .requestMatchers(HttpMethod.POST,"/talleres/register").authenticated()
+                .requestMatchers(HttpMethod.PUT,"/talleres/estado").authenticated()
+                .requestMatchers(HttpMethod.DELETE,"/talleres/{titulo}").authenticated()
                 .anyRequest().permitAll()
             } // Los recursos protegidos y publicos
             .oauth2ResourceServer { oauth2 -> oauth2.jwt(Customizer.withDefaults()) }

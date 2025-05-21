@@ -18,4 +18,4 @@ data class Reserva(
     val tallerID: ObjectId,
     var estado: EstadoReserva = EstadoReserva.ACTIVA,
     val fecha: Date = Date.from(Instant.now())
-    )
+)

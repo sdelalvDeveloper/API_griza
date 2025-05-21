@@ -1,7 +1,9 @@
 package com.es.API_REST_SEGURA.controller
 
 import com.es.API_REST_SEGURA.dto.LoginUsuarioDTO
+import com.es.API_REST_SEGURA.dto.UsuarioDTO
 import com.es.API_REST_SEGURA.dto.UsuarioRegisterDTO
+import com.es.API_REST_SEGURA.dto.UsuarioUpdatePasswordDTO
 import com.es.API_REST_SEGURA.error.exception.UnauthorizedException
 import com.es.API_REST_SEGURA.model.Usuario
 import com.es.API_REST_SEGURA.service.TokenService
@@ -50,7 +52,7 @@ class UsuarioController {
     fun insert(
         httpRequest: HttpServletRequest,
         @RequestBody usuarioRegisterDTO: UsuarioRegisterDTO
-    ) : ResponseEntity<Usuario>?{
+    ) : ResponseEntity<UsuarioDTO>?{
 
         val usuarioInsertado = usuarioService.insertUser(usuarioRegisterDTO)
 
@@ -58,19 +60,32 @@ class UsuarioController {
     }
 
     @GetMapping("/{username}")
-    fun getUser(httpRequest: HttpServletRequest, @PathVariable username: String): ResponseEntity<Any>? {
-        val usuarioRegistrado = usuarioService.loadUserByUsername(username)
+    fun getUser(httpRequest: HttpServletRequest, @PathVariable username: String): ResponseEntity<UsuarioDTO>? {
+        val usuarioRegistrado = usuarioService.getUserByUsername(username)
 
         return ResponseEntity(usuarioRegistrado, HttpStatus.OK)
     }
 
-    @DeleteMapping("/{username}")
-    fun deleteUser(httpRequest: HttpServletRequest, @PathVariable username: String, authentication: Authentication): ResponseEntity<Any>? {
-        val usuarioEliminado = usuarioService.deleteUserByUsername(username, authentication)
+    @DeleteMapping("/delete/{username}/{password}")
+    fun deleteUser(
+        httpRequest: HttpServletRequest,
+        @PathVariable username: String,
+        @PathVariable password: String,
+        authentication: Authentication): ResponseEntity<UsuarioDTO>? {
+        val usuarioEliminado = usuarioService.deleteUserByUsername(username, password, authentication)
 
         return ResponseEntity(usuarioEliminado, HttpStatus.NO_CONTENT)
     }
 
+    @PostMapping("/updatePassword")
+    fun updatePassword(
+        httpRequest: HttpServletRequest,
+        @RequestBody usuarioUpdatePasswordDTO: UsuarioUpdatePasswordDTO,
+        authentication: Authentication
+    ) : ResponseEntity<Any>? {
+        val usuarioActualizado = usuarioService.updatePassword(usuarioUpdatePasswordDTO, authentication)
 
+        return ResponseEntity(usuarioActualizado, HttpStatus.OK)
+    }
 
 }

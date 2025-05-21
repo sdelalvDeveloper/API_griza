@@ -25,7 +25,7 @@ class ReservaCustomRepositoryImpl: ReservaCustomRepository {
     override fun getReservaByUsername(username: String): List<Reserva> {
         val coll = getConnection()
 
-        val filtro = Filters.eq("reservas.username", username)
+        val filtro = Filters.eq("username", username)
         val reserva = coll.find(filtro)
         return reserva.toList()
     }
@@ -39,8 +39,27 @@ class ReservaCustomRepositoryImpl: ReservaCustomRepository {
     override fun getReservaById(id: ObjectId): Reserva? {
         val coll = getConnection()
 
-        val filtro = Filters.eq("id", id)
-        val tarea = coll.find(filtro)
-        return tarea.firstOrNull()
+        val filtro = Filters.eq("_id", id)
+        val reserva = coll.find(filtro)
+        return reserva.firstOrNull()
     }
+
+    override fun updateReserva(id: ObjectId, nuevaReserva: Reserva): Boolean {
+        val coll = getConnection()
+
+        val filtro = Filters.eq("_id", id)
+        val resultado = coll.replaceOne(filtro, nuevaReserva)
+
+        return resultado.modifiedCount > 0
+    }
+
+    override fun deleteReservaById(id: ObjectId): Boolean {
+        val coll = getConnection()
+
+        val filtro = Filters.eq("_id", id)
+        val resultado = coll.deleteOne(filtro)
+
+        return resultado.deletedCount > 0
+    }
+
 }

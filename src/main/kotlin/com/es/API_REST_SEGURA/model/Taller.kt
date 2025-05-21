@@ -17,6 +17,7 @@ data class Taller(
     val titulo: String,
     val descripcion: String,
     val fecha: Date,
+    val plazas: Int = 6,
     var estado: EstadoTaller = EstadoTaller.DISPONIBLE,
     val reservas: List<Reserva> = listOf()
 )

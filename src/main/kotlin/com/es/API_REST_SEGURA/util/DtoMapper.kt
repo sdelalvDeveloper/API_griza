@@ -2,6 +2,7 @@ package com.es.API_REST_SEGURA.util
 
 import com.es.API_REST_SEGURA.dto.*
 import com.es.API_REST_SEGURA.model.*
+import org.bson.types.ObjectId
 
 class DtoMapper {
 
@@ -18,19 +19,19 @@ class DtoMapper {
         return usuarioMapeado
     }
 
-    fun userEntityToDTO(usuario: Usuario) : UsuarioDTO? {
-        val usuarioDTO = usuario.roles?.let {
+    fun userEntityToDTO(usuario: Usuario) : UsuarioDTO {
+        val usuarioDTO =
             UsuarioDTO(
                 usuario.username,
                 usuario.email,
-                it
+                usuario.telefono,
+                usuario.bono
             )
-        }
         return usuarioDTO
     }
 
     // Mapeo de talleres
-    fun tallerDTOToEntity(taller: TallerRegisterDTO): Taller {
+    fun tallerRegisterDTOToEntity(taller: TallerRegisterDTO): Taller {
         val tallerRegistrar = Taller(
             null,
             taller.titulo.lowercase(),
@@ -40,12 +41,33 @@ class DtoMapper {
         return tallerRegistrar
     }
 
+    fun tallerDTOToEntity(taller: TallerDTO): Taller {
+        val tallerEntity = Taller(
+            null,
+            taller.titulo,
+            taller.descripcion,
+            taller.fecha
+        )
+        return tallerEntity
+    }
+
     fun tallerEntityToDTO(taller: Taller): TallerDTO {
         val tallerDTO = TallerDTO(
+            taller.id.toString(),
             taller.titulo,
             taller.descripcion,
             taller.fecha,
+            taller.plazas,
             taller.estado
+        )
+        return tallerDTO
+    }
+
+    fun tallerEntityToRegisterDto(taller: Taller): TallerRegisterDTO {
+        val tallerDTO = TallerRegisterDTO(
+            taller.titulo,
+            taller.descripcion,
+            taller.fecha,
         )
         return tallerDTO
     }
@@ -55,14 +77,16 @@ class DtoMapper {
         val reservaRegistrar = Reserva(
             null,
             reserva.username,
-            reserva.tallerID
+            ObjectId(reserva.tallerID)
         )
         return reservaRegistrar
     }
 
     fun reservaEntityToDTO(reserva: Reserva): ReservaDTO {
         val reservaDTO = ReservaDTO(
+            reserva.id.toString(),
             reserva.username,
+            reserva.tallerID.toString(),
             reserva.estado,
             reserva.fecha
         )

@@ -1,9 +1,7 @@
 package com.es.API_REST_SEGURA.dto
 
-data class UsuarioRegisterDTO(
+data class UsuarioUpdatePasswordDTO(
     val username: String,
-    val email: String,
-    val telefono: String,
     val password: String,
     val passwordRepeat: String
 )

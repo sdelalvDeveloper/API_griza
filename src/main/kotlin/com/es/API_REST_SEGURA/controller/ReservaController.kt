@@ -2,7 +2,7 @@ package com.es.API_REST_SEGURA.controller
 
 import com.es.API_REST_SEGURA.dto.ReservaDTO
 import com.es.API_REST_SEGURA.dto.ReservaRegisterDTO
-import com.es.API_REST_SEGURA.model.EstadoReserva
+import com.es.API_REST_SEGURA.error.exception.NotFoundException
 import com.es.API_REST_SEGURA.service.ReservaService
 import jakarta.servlet.http.HttpServletRequest
 import org.bson.types.ObjectId
@@ -21,10 +21,9 @@ class ReservaController {
 
     @GetMapping("/{username}")
     fun getReservaByUsername(httpRequest: HttpServletRequest,
-                            @PathVariable username: String,
-                            authentication: Authentication
+                            @PathVariable username: String
     ): ResponseEntity<List<ReservaDTO>>? {
-        val reserva = reservaService.getReservaByUsername(username, authentication)
+        val reserva = reservaService.getReservaByUsername(username)
 
         return ResponseEntity(reserva, HttpStatus.OK)
     }
@@ -48,23 +47,28 @@ class ReservaController {
         return ResponseEntity(reservaRegistrada, HttpStatus.CREATED)
     }
 
-    @DeleteMapping("/{id}")
-    fun deleteTReserva(httpRequest: HttpServletRequest,
-                     @PathVariable id: ObjectId,
-                     authentication: Authentication
-    ): ResponseEntity<ReservaDTO> {
-        reservaService.deleteReservaById(id, authentication)
+    @DeleteMapping("/{id}/taller/{tallerID}")
+    fun deleteReserva(httpRequest: HttpServletRequest,
+                     @PathVariable id: String,
+                      @PathVariable tallerID: String,
+                      authentication: Authentication
+    ): ResponseEntity<Any> {
+        reservaService.deleteReservaById(ObjectId(id), ObjectId(tallerID), authentication)
 
         return ResponseEntity.noContent().build()
     }
 
-    @PutMapping("/{id}/cambiar-estado")
-    fun cambiarEstadoReserva(
-        @PathVariable id: ObjectId,
-        @RequestBody nuevoEstado: EstadoReserva, // Nuevo estado (COMPLETADA o PENDIENTE)
-        authentication: Authentication
-    ): ResponseEntity<ReservaDTO> {
-        val reservaActualizada = reservaService.cambiarEstadoReserva(id, nuevoEstado, authentication)
-        return ResponseEntity(reservaActualizada, HttpStatus.OK)
+    @GetMapping("first/{username}")
+    fun getFirstReservaByUsername(httpRequest: HttpServletRequest,
+                                  @PathVariable username: String
+    ): ResponseEntity<ReservaDTO>? {
+        val reserva = reservaService.getReservaByUsername(username).firstOrNull()
+
+        return if (reserva != null) {
+            ResponseEntity(reserva, HttpStatus.OK)
+        } else {
+            throw NotFoundException("Sin reservas")
+        }
     }
+
 }
