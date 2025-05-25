@@ -1,6 +1,7 @@
 package com.es.API_REST_SEGURA.service
 
 import com.es.API_REST_SEGURA.dto.ReservaDTO
+import com.es.API_REST_SEGURA.dto.ReservaFullDTO
 import com.es.API_REST_SEGURA.dto.ReservaRegisterDTO
 import com.es.API_REST_SEGURA.error.exception.BadRequestException
 import com.es.API_REST_SEGURA.error.exception.NotFoundException
@@ -26,15 +27,20 @@ class ReservaService {
 
     private val dtoMapper = DtoMapper()
 
-    fun getReservaByUsername(username: String): List<ReservaDTO> {
-        val reservas = reservaRepository.getReservaByUsername(username.lowercase())
+    fun getReservaByUsername(username: String, authentication: Authentication): List<ReservaFullDTO> {
+        val reservas =  if (authentication.authorities.any { it.authority == "ROLE_ADMIN" }) {
+            reservaRepository.getAll()
+        } else {
+            reservaRepository.getReservaByUsername(username.lowercase())
+        }
 
         return reservas.map { reserva ->
             // Obtener taller para incluir su título
             val taller = tallerService.getTallerById(reserva.tallerID)
             taller.let {
-                ReservaDTO(
+                ReservaFullDTO(
                     id = reserva.id.toString(),
+                    username = reserva.username,
                     tituloTaller = it.titulo,
                     tallerID = it.id.toString(),
                     estado = reserva.estado,
@@ -145,6 +151,11 @@ class ReservaService {
         // Sumar uno al bono
         val usuarioActualizado = usuario.copy(bono = usuario.bono + 1)
         usuarioService.updateUser(usuario.username, usuarioActualizado)
+    }
+
+    fun deleteAll(username: String, authentication: Authentication) {
+        val reservas = getReservaByUsername(username, authentication)
+        reservas.forEach { deleteReservaById(ObjectId(it.id), ObjectId(it.tallerID), authentication) }
     }
 
 }

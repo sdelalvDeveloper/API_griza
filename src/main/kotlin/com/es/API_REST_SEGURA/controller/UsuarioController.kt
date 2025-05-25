@@ -45,7 +45,9 @@ class UsuarioController {
         // PASAMOS A GENERAR EL TOKEN
         val token = tokenService.generarToken(authentication)
 
-        return ResponseEntity(mapOf("token" to token), HttpStatus.OK)
+        val role = authentication.authorities.firstOrNull()?.authority?.removePrefix("ROLE_") ?: "USER"
+
+        return ResponseEntity(mapOf("token" to token, "role" to role), HttpStatus.OK)
     }
 
     @PostMapping("/register")

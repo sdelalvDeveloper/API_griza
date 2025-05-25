@@ -1,6 +1,7 @@
 package com.es.API_REST_SEGURA.controller
 
 import com.es.API_REST_SEGURA.dto.ReservaDTO
+import com.es.API_REST_SEGURA.dto.ReservaFullDTO
 import com.es.API_REST_SEGURA.dto.ReservaRegisterDTO
 import com.es.API_REST_SEGURA.error.exception.NotFoundException
 import com.es.API_REST_SEGURA.service.ReservaService
@@ -21,9 +22,10 @@ class ReservaController {
 
     @GetMapping("/{username}")
     fun getReservaByUsername(httpRequest: HttpServletRequest,
-                            @PathVariable username: String
-    ): ResponseEntity<List<ReservaDTO>>? {
-        val reserva = reservaService.getReservaByUsername(username)
+                            @PathVariable username: String,
+                             authentication: Authentication
+    ): ResponseEntity<List<ReservaFullDTO>>? {
+        val reserva = reservaService.getReservaByUsername(username, authentication)
 
         return ResponseEntity(reserva, HttpStatus.OK)
     }
@@ -47,7 +49,7 @@ class ReservaController {
         return ResponseEntity(reservaRegistrada, HttpStatus.CREATED)
     }
 
-    @DeleteMapping("/{id}/taller/{tallerID}")
+    @DeleteMapping("delete/{id}/taller/{tallerID}")
     fun deleteReserva(httpRequest: HttpServletRequest,
                      @PathVariable id: String,
                       @PathVariable tallerID: String,
@@ -60,15 +62,26 @@ class ReservaController {
 
     @GetMapping("first/{username}")
     fun getFirstReservaByUsername(httpRequest: HttpServletRequest,
-                                  @PathVariable username: String
-    ): ResponseEntity<ReservaDTO>? {
-        val reserva = reservaService.getReservaByUsername(username).firstOrNull()
+                                  @PathVariable username: String,
+                                  authentication: Authentication
+    ): ResponseEntity<ReservaFullDTO>? {
+        val reserva = reservaService.getReservaByUsername(username, authentication).firstOrNull()
 
         return if (reserva != null) {
             ResponseEntity(reserva, HttpStatus.OK)
         } else {
             throw NotFoundException("Sin reservas")
         }
+    }
+
+    @DeleteMapping("/deleteAll/{username}")
+    fun deleteReservaAll(httpRequest: HttpServletRequest,
+                      @PathVariable username: String,
+                      authentication: Authentication
+    ): ResponseEntity<Any> {
+        reservaService.deleteAll(username, authentication)
+
+        return ResponseEntity.noContent().build()
     }
 
 }

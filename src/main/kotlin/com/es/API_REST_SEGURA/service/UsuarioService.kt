@@ -25,6 +25,7 @@ class UsuarioService() : UserDetailsService {
 
     @Autowired
     private lateinit var usuarioRepository: UsuarioRepository
+
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
@@ -100,14 +101,17 @@ class UsuarioService() : UserDetailsService {
         val usuarioRegistrado: Usuario = usuarioRepository
             .findByUsername(username)
             .orElseThrow { NotFoundException("$username no existe.") }
-        if (
-            (authentication.name == username && passwordEncoder.matches(password, usuarioRegistrado.password))
-            || authentication.authorities.any { it.authority == "ROLE_ADMIN" }
-            ) {
+
+        if (!passwordEncoder.matches(password, usuarioRegistrado.password)) {
+            throw BadRequestException("Contraseña incorrecta.")
+        }
+
+        if (authentication.name == username || authentication.authorities.any { it.authority == "ROLE_ADMIN" }) {
             usuarioRepository.delete(usuarioRegistrado)
         } else {
             throw UnauthorizedException("No tiene permiso para eliminar otro usuario")
         }
+
         val usuarioEliminado = dtoMapper.userEntityToDTO(usuarioRegistrado)
         return usuarioEliminado
     }
@@ -119,17 +123,19 @@ class UsuarioService() : UserDetailsService {
     fun updatePassword(usuario: UsuarioUpdatePasswordDTO, authentication: Authentication): Boolean {
         val usuarioExiste = getUserEntity(usuario.username)
 
-        if (usuario.password != usuario.passwordRepeat) {
-            throw BadRequestException("Las contraseñas deben coincidir.")
+        if (authentication.name != usuario.username) {
+            throw BadRequestException("Nombre de usuario incorrecto")
         }
 
-        val password = passwordEncoder.encode(usuario.password)
-
-        if (passwordEncoder.matches(password, usuarioExiste.password)) {
+        if (!passwordEncoder.matches(usuario.password, usuarioExiste.password)) {
             throw UnauthorizedException("La contraseña introducida no es correcta")
         }
 
-        val usuarioActualizado = usuarioExiste.copy(password = password)
+        if (!isLongPassword(usuario.newPassword)) {
+            throw BadRequestException("La contraseña debe tener 6 caracteres")
+        }
+
+        val usuarioActualizado = usuarioExiste.copy(password = usuario.newPassword)
 
         return usuarioRepository.updateByUsername(usuario.username, usuarioActualizado)
     }
