@@ -68,6 +68,12 @@ class UsuarioController {
         return ResponseEntity(usuarioRegistrado, HttpStatus.OK)
     }
 
+    @GetMapping("/getAll")
+    fun getAll(httpRequest: HttpServletRequest, authentication: Authentication): ResponseEntity<List<UsuarioDTO>>? {
+        val listaUsuarios = usuarioService.getAll(authentication)
+        return ResponseEntity(listaUsuarios, HttpStatus.OK)
+    }
+
     @DeleteMapping("/delete/{username}/{password}")
     fun deleteUser(
         httpRequest: HttpServletRequest,

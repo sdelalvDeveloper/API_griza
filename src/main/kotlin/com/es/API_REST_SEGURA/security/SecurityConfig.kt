@@ -39,6 +39,7 @@ class SecurityConfig {
             .authorizeHttpRequests { auth -> auth
                 .requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/usuarios/register").permitAll()
+                .requestMatchers(HttpMethod.GET, "/usuarios/getAll").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/talleres/{username}").authenticated()
                 .requestMatchers(HttpMethod.GET,"/talleres/getAll").authenticated()
                 .requestMatchers(HttpMethod.POST,"/talleres/register").authenticated()

@@ -80,13 +80,17 @@ class UsuarioService() : UserDetailsService {
     }
 
     fun getUserByUsername(username: String): UsuarioDTO {
-        val dtoMapper = DtoMapper()
         val usuarioRegistrado: Usuario = usuarioRepository
             .findByUsername(username)
             .orElseThrow { NotFoundException("$username no existe.") }
 
         val usuarioResult = dtoMapper.userEntityToDTO(usuarioRegistrado)
         return usuarioResult
+    }
+
+    fun getAll(authentication: Authentication): List<UsuarioDTO> {
+        val usuarios = usuarioRepository.getAllUsers()
+        return usuarios.map { dtoMapper.userEntityToDTO(it) }
     }
 
     fun getUserEntity(username: String): Usuario {
@@ -102,7 +106,7 @@ class UsuarioService() : UserDetailsService {
             .findByUsername(username)
             .orElseThrow { NotFoundException("$username no existe.") }
 
-        if (!passwordEncoder.matches(password, usuarioRegistrado.password)) {
+        if (!passwordEncoder.matches(password, usuarioRegistrado.password) || !authentication.authorities.any { it.authority == "ROLE_ADMIN" }) {
             throw BadRequestException("Contraseña incorrecta.")
         }
 

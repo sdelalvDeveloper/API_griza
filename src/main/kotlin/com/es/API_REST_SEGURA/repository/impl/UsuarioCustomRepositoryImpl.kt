@@ -1,7 +1,6 @@
 package com.es.API_REST_SEGURA.repository.impl
 
-import com.es.API_REST_SEGURA.dto.UsuarioUpdatePasswordDTO
-import com.es.API_REST_SEGURA.model.Taller
+
 import com.es.API_REST_SEGURA.model.Usuario
 import com.es.API_REST_SEGURA.repository.UsuarioCustomRepository
 import com.mongodb.client.MongoCollection
@@ -29,6 +28,12 @@ class UsuarioCustomRepositoryImpl: UsuarioCustomRepository {
         val filtro = Filters.eq("username", username)
         val resultado = coll.replaceOne(filtro, usuario)
         return resultado.modifiedCount > 0
+    }
+
+    override fun getAllUsers(): List<Usuario> {
+        val coll = getConnection()
+        val usuarios = coll.find()
+        return usuarios.toList()
     }
 
 }
