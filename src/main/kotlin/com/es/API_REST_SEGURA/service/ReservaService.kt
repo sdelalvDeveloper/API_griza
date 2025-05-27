@@ -106,7 +106,7 @@ class ReservaService {
             estado = estadoActualizado
         )
 
-        tallerEntity.id?.let { tallerService.updateTaller(it, tallerActualizado) }
+        tallerEntity.id?.let { tallerService.updateTaller(it, dtoMapper.tallerEntityToRegisterDto(tallerActualizado)) }
 
         return dtoMapper.reservaEntityToDTO(reservaGuardada)
     }
