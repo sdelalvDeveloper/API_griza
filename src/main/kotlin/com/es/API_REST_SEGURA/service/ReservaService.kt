@@ -5,6 +5,7 @@ import com.es.API_REST_SEGURA.dto.ReservaFullDTO
 import com.es.API_REST_SEGURA.dto.ReservaRegisterDTO
 import com.es.API_REST_SEGURA.error.exception.BadRequestException
 import com.es.API_REST_SEGURA.error.exception.NotFoundException
+import com.es.API_REST_SEGURA.error.exception.UnauthorizedException
 import com.es.API_REST_SEGURA.model.EstadoReserva
 import com.es.API_REST_SEGURA.repository.ReservaRepository
 import com.es.API_REST_SEGURA.util.DtoMapper
@@ -119,31 +120,7 @@ class ReservaService {
         val reservaCancelada = reserva.copy(estado = EstadoReserva.CANCELADA)
         reservaRepository.save(reservaCancelada)
 
-        // Obtener el taller relacionado
-        val tallerEntity = tallerService.getTallerById(tallerID)
-
-
-        // Eliminar la reserva de la lista del taller (por ID)
-        val reservasActualizadas = tallerEntity.reservas
-            .filter { it.id != id }  // Filtramos la reserva cancelada
-
-        // Sumar una plaza (sin superar el total original)
-        var plazasActualizadas = (tallerEntity.plazas + 1).coerceAtMost(6)  // 6 es el límite, o usa una constante si es dinámico
-        if (tallerEntity.reservas.isEmpty()) {
-            plazasActualizadas = 6
-        }
-
-        // Actualizar estado
-        val nuevoEstado = tallerService.cambiarEstadoTaller(plazasActualizadas)
-
-        val tallerActualizado = tallerEntity.copy(
-            reservas = reservasActualizadas,
-            estado = nuevoEstado,
-            plazas = plazasActualizadas
-        )
-
-        // Guardar el taller actualizado
-        tallerEntity.id?.let { tallerService.updateTaller(it, tallerActualizado) }
+        reserva.id?.let { tallerService.updateReservasTaller(it, reserva.tallerID) }
         reserva.id?.let { reservaRepository.deleteReservaById(it) }
 
         val usuario = usuarioService.getUserEntity(authentication.name)
@@ -154,8 +131,22 @@ class ReservaService {
     }
 
     fun deleteAll(username: String, authentication: Authentication) {
-        val reservas = getReservaByUsername(username, authentication)
-        reservas.forEach { deleteReservaById(ObjectId(it.id), ObjectId(it.tallerID), authentication) }
+        val reservas = if (authentication.name == username || authentication.authorities.any { it.authority == "ROLE_ADMIN" }) {
+            getReservaByUsername(username, authentication)
+        } else {
+            throw UnauthorizedException("No tiene permiso para eliminar las reservas")
+        }
+
+        reservas.forEach { reserva ->
+            try {
+                tallerService.updateReservasTaller(ObjectId(reserva.id), ObjectId(reserva.tallerID))
+                reserva.id.let { reservaRepository.deleteReservaById(ObjectId(reserva.id)) }
+            } catch (e: Exception) {
+                throw BadRequestException("Error al eliminar reservas")
+            }
+        }
     }
+
+
 
 }

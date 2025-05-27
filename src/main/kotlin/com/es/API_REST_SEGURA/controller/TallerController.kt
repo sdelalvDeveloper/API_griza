@@ -40,11 +40,11 @@ class TallerController {
 
     @PostMapping("/register")
     fun insertTaller(httpRequest: HttpServletRequest,
-                     @RequestBody tarea: TallerRegisterDTO,
+                     @RequestBody taller: TallerRegisterDTO,
     ): ResponseEntity<TallerDTO>? {
-        val tallerRegistrada = tallerService.insertTaller(tarea)
+        val tallerRegistrado = tallerService.insertTaller(taller)
 
-        return ResponseEntity(tallerRegistrada, HttpStatus.CREATED)
+        return ResponseEntity(tallerRegistrado, HttpStatus.CREATED)
     }
 
     @DeleteMapping("/{id}")
@@ -55,5 +55,16 @@ class TallerController {
         tallerService.deleteTallerById(id, authentication)
 
         return ResponseEntity.noContent().build()
+    }
+
+    @PostMapping("/update/{id}")
+    fun updateTaller(
+        httpRequest: HttpServletRequest,
+                     @PathVariable id: String,
+                     @RequestBody taller: TallerRegisterDTO,
+                     authentication: Authentication
+    ): ResponseEntity<TallerDTO> {
+        val tallerActualizado = tallerService.updateTaller(ObjectId(id), taller)
+        return ResponseEntity.ok(tallerActualizado)
     }
 }
