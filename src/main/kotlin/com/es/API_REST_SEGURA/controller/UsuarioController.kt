@@ -96,4 +96,15 @@ class UsuarioController {
         return ResponseEntity(usuarioActualizado, HttpStatus.OK)
     }
 
+    @PostMapping("/activarBono/{username}")
+    fun updateBonoUsuario(
+        httpRequest: HttpServletRequest,
+        @PathVariable username: String,
+        authentication: Authentication
+    ) : ResponseEntity<Any>? {
+        val usuarioActualizado = usuarioService.activarBono(username, authentication)
+
+        return ResponseEntity(usuarioActualizado, HttpStatus.OK)
+    }
+
 }

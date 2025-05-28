@@ -144,4 +144,15 @@ class UsuarioService() : UserDetailsService {
         return usuarioRepository.updateByUsername(usuario.username, usuarioActualizado)
     }
 
+    fun activarBono(username: String, authentication: Authentication): UsuarioDTO {
+        val usuario = getUserEntity(username)
+        val usuarioBono = usuario.copy(bono = usuario.bono + 5)
+        val usuarioActualizado = usuarioRepository.updateByUsername(usuario.username, usuarioBono)
+        if(!usuarioActualizado) {
+            throw BadRequestException("No se pudo activar el bono al usuario $username.")
+        }
+
+        return dtoMapper.userEntityToDTO(usuarioBono)
+    }
+
 }
