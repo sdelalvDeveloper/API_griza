@@ -4,6 +4,7 @@ import com.es.API_REST_SEGURA.dto.ReservaDTO
 import com.es.API_REST_SEGURA.dto.ReservaFullDTO
 import com.es.API_REST_SEGURA.dto.ReservaRegisterDTO
 import com.es.API_REST_SEGURA.error.exception.BadRequestException
+import com.es.API_REST_SEGURA.error.exception.ForbiddenException
 import com.es.API_REST_SEGURA.error.exception.NotFoundException
 import com.es.API_REST_SEGURA.error.exception.UnauthorizedException
 import com.es.API_REST_SEGURA.model.EstadoReserva
@@ -128,6 +129,23 @@ class ReservaService {
         // Sumar uno al bono
         val usuarioActualizado = usuario.copy(bono = usuario.bono + 1)
         usuarioService.updateUser(usuario.username, usuarioActualizado)
+    }
+
+    fun deleteReservaByIdTaller(tallerID: ObjectId, authentication: Authentication) {
+        val reservas = reservaRepository.getReservaByIdTaller(tallerID)
+
+        if(reservas.isNotEmpty()) {
+            reservas.forEach { reserva ->
+                reserva.id?.let { reservaRepository.deleteReservaById(it) }
+                val usuario = usuarioService.getUserEntity(reserva.username)
+
+                // Sumar uno al bono
+                val usuarioActualizado = usuario.copy(bono = usuario.bono + 1)
+                usuarioService.updateUser(usuario.username, usuarioActualizado)
+            }
+        } else {
+            throw ForbiddenException("No había reservas para el taller.")
+        }
     }
 
     fun deleteAll(username: String, authentication: Authentication) {

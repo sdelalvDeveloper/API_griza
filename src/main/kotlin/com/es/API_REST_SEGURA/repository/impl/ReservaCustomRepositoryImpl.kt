@@ -44,6 +44,14 @@ class ReservaCustomRepositoryImpl: ReservaCustomRepository {
         return reserva.firstOrNull()
     }
 
+    override fun getReservaByIdTaller(idTaller: ObjectId): List<Reserva> {
+        val coll = getConnection()
+
+        val filtro = Filters.eq("tallerID", idTaller)
+        val reserva = coll.find(filtro)
+        return reserva.toList()
+    }
+
     override fun updateReserva(id: ObjectId, nuevaReserva: Reserva): Boolean {
         val coll = getConnection()
 

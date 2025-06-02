@@ -62,7 +62,6 @@ class TallerService {
         // Obtener el taller relacionado
         val tallerEntity = getTallerById(tallerID)
 
-
         // Eliminar la reserva de la lista del taller (por ID)
         val reservasActualizadas = tallerEntity.reservas
             .filter { it.id != id }  // Filtramos la reserva cancelada
@@ -89,14 +88,19 @@ class TallerService {
     }
 
     fun updateTaller(id: ObjectId, nuevoTaller: TallerRegisterDTO): TallerDTO{
-        val tallerEntity = dtoMapper.tallerRegisterDTOToEntity(nuevoTaller)
+        val tallerEntity = tallerRepository.getTallerById(id)
 
-        val actualizado = tallerRepository.updateTaller(id, tallerEntity)
-        if (!actualizado) {
+        val tallerActualizado = tallerEntity?.copy(
+            titulo = nuevoTaller.titulo,
+            descripcion = nuevoTaller.descripcion,
+            fecha = nuevoTaller.fecha
+        )
+        val actualizado = tallerActualizado?.let { tallerRepository.updateTaller(id, it) }
+        if (!actualizado!!) {
             throw BadRequestException("No se pudo actualizar el taller.")
         }
 
-        return dtoMapper.tallerEntityToDTO(tallerEntity)
+        return dtoMapper.tallerEntityToDTO(tallerActualizado)
     }
 
     fun cambiarEstadoTaller(plazas: Int): EstadoTaller {

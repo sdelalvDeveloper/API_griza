@@ -47,7 +47,7 @@ class TallerController {
         return ResponseEntity(tallerRegistrado, HttpStatus.CREATED)
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     fun deleteTaller(httpRequest: HttpServletRequest,
                      @PathVariable id: ObjectId,
                      authentication: Authentication

@@ -11,6 +11,8 @@ interface ReservaCustomRepository {
 
     fun getReservaById(id: ObjectId): Reserva?
 
+    fun getReservaByIdTaller(idTaller: ObjectId): List<Reserva>
+
     fun updateReserva(id: ObjectId, nuevaReserva: Reserva): Boolean
 
     fun deleteReservaById(id: ObjectId): Boolean
