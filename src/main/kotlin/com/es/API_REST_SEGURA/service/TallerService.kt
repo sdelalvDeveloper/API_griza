@@ -87,7 +87,7 @@ class TallerService {
         return tallerRepository.updateTaller(id, tallerActualizado)
     }
 
-    fun updateTaller(id: ObjectId, nuevoTaller: TallerRegisterDTO): TallerDTO{
+    fun updateTaller(id: ObjectId, nuevoTaller: TallerRegisterDTO): TallerDTO {
         val tallerEntity = tallerRepository.getTallerById(id)
 
         val tallerActualizado = tallerEntity?.copy(
@@ -101,6 +101,15 @@ class TallerService {
         }
 
         return dtoMapper.tallerEntityToDTO(tallerActualizado)
+    }
+
+    fun addReservaTaller(id: ObjectId, nuevoTaller: Taller): TallerDTO {
+        val actualizado = nuevoTaller.let { tallerRepository.updateTaller(id, it) }
+        if (!actualizado) {
+            throw BadRequestException("No se pudo actualizar el taller.")
+        }
+
+        return dtoMapper.tallerEntityToDTO(nuevoTaller)
     }
 
     fun cambiarEstadoTaller(plazas: Int): EstadoTaller {

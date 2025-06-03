@@ -86,12 +86,23 @@ class DtoMapper {
     fun reservaEntityToDTO(reserva: Reserva): ReservaDTO {
         val reservaDTO = ReservaDTO(
             reserva.id.toString(),
-            reserva.username,
             reserva.tallerID.toString(),
             reserva.estado,
             reserva.fecha
         )
         return reservaDTO
+    }
+
+    fun reservaEntityToFullDTO(reserva: Reserva, taller: Taller): ReservaFullDTO {
+        val reservaFullDTO = ReservaFullDTO(
+            reserva.id.toString(),
+            reserva.username,
+            taller.titulo,
+            reserva.tallerID.toString(),
+            reserva.estado,
+            reserva.fecha
+        )
+        return reservaFullDTO
     }
 
 }

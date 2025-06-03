@@ -59,7 +59,7 @@ class ReservaService {
         return reservas
     }
 
-    fun insertReserva(reservaDTO: ReservaRegisterDTO, authentication: Authentication): ReservaDTO? {
+    fun insertReserva(reservaDTO: ReservaRegisterDTO, authentication: Authentication): ReservaFullDTO? {
         // Verifica que el usuario esté autenticado (ya que Authentication está presente)
         val username = authentication.name
 
@@ -107,9 +107,9 @@ class ReservaService {
             estado = estadoActualizado
         )
 
-        tallerEntity.id?.let { tallerService.updateTaller(it, dtoMapper.tallerEntityToRegisterDto(tallerActualizado)) }
+        tallerEntity.id?.let { tallerService.addReservaTaller(it, tallerActualizado) }
 
-        return dtoMapper.reservaEntityToDTO(reservaGuardada)
+        return dtoMapper.reservaEntityToFullDTO(reservaGuardada, tallerActualizado)
     }
 
 

@@ -43,7 +43,7 @@ class ReservaController {
     fun insertReserva(httpRequest: HttpServletRequest,
                       @RequestBody reserva: ReservaRegisterDTO,
                       authentication: Authentication
-    ): ResponseEntity<ReservaDTO>? {
+    ): ResponseEntity<ReservaFullDTO>? {
         val reservaRegistrada = reservaService.insertReserva(reserva, authentication)
 
         return ResponseEntity(reservaRegistrada, HttpStatus.CREATED)
