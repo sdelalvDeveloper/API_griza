@@ -7,6 +7,7 @@ Este proyecto consiste en una API que maneja tres documentos principales: **Usua
 ### 1. Usuario
 Este documento representa a los usuarios registrados en el sistema.
 
+
 **Campos:**
 - `id` (String): Identificador único del usuario.
 - `username` (String): Nombre de usuario.
