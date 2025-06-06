@@ -50,7 +50,6 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT,"/talleres//update/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE,"/talleres/delete/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/reservas/{username}").authenticated()
-                .requestMatchers(HttpMethod.GET,"/reservas/getAll").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST,"/reservas/register").authenticated()
                 .requestMatchers(HttpMethod.DELETE,"/reservas/delete/{id}/taller/{tallerID}").authenticated()
                 .requestMatchers(HttpMethod.DELETE,"/reservas/delete/{tallerID}").authenticated()

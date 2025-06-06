@@ -8,6 +8,7 @@ import com.es.API_REST_SEGURA.error.exception.ForbiddenException
 import com.es.API_REST_SEGURA.error.exception.NotFoundException
 import com.es.API_REST_SEGURA.error.exception.UnauthorizedException
 import com.es.API_REST_SEGURA.model.EstadoReserva
+import com.es.API_REST_SEGURA.model.Reserva
 import com.es.API_REST_SEGURA.repository.ReservaRepository
 import com.es.API_REST_SEGURA.util.DtoMapper
 import org.bson.types.ObjectId
@@ -40,22 +41,14 @@ class ReservaService {
             // Obtener taller para incluir su título
             val taller = tallerService.getTallerById(reserva.tallerID)
             taller.let {
-                ReservaFullDTO(
-                    id = reserva.id.toString(),
-                    username = reserva.username,
-                    tituloTaller = it.titulo,
-                    tallerID = it.id.toString(),
-                    estado = reserva.estado,
-                    fechaTaller = it.fecha
-                )
+                dtoMapper.reservaEntityToFullDTO(reserva, taller)
             }
         }.sortedBy { it.fechaTaller }
     }
 
-    fun getAll(): List<ReservaDTO> {
-        val reservas = reservaRepository.getAll().map { reserva ->
-            dtoMapper.reservaEntityToDTO(reserva)
-        }
+    fun getAll(): List<Reserva> {
+        val reservas = reservaRepository.getAll()
+
         return reservas
     }
 

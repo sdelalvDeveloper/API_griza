@@ -30,15 +30,6 @@ class ReservaController {
         return ResponseEntity(reserva, HttpStatus.OK)
     }
 
-    @GetMapping("/getAll")
-    fun getAllReservas(httpRequest: HttpServletRequest,
-                       authentication: Authentication
-    ): ResponseEntity<List<ReservaDTO>>? {
-        val reservas = reservaService.getAll()
-
-        return ResponseEntity(reservas, HttpStatus.OK)
-    }
-
     @PostMapping("/register")
     fun insertReserva(httpRequest: HttpServletRequest,
                       @RequestBody reserva: ReservaRegisterDTO,
