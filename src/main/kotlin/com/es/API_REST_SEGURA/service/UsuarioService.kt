@@ -106,18 +106,24 @@ class UsuarioService() : UserDetailsService {
             .findByUsername(username)
             .orElseThrow { NotFoundException("$username no existe.") }
 
-        if (!passwordEncoder.matches(password, usuarioRegistrado.password) || !authentication.authorities.any { it.authority == "ROLE_ADMIN" }) {
-            throw BadRequestException("Contraseña incorrecta.")
+        val esAdmin = authentication.authorities.any { it.authority == "ROLE_ADMIN" }
+        val esPropioUsuario = authentication.name == username
+
+        // Si no es admin, debe validar su contraseña
+        if (!esAdmin) {
+            if (!passwordEncoder.matches(password, usuarioRegistrado.password)) {
+                throw BadRequestException("Contraseña incorrecta.")
+            }
         }
 
-        if (authentication.name == username || authentication.authorities.any { it.authority == "ROLE_ADMIN" }) {
+        // Solo admin o el propio usuario pueden borrar
+        if (esAdmin || esPropioUsuario) {
             usuarioRepository.delete(usuarioRegistrado)
         } else {
             throw UnauthorizedException("No tiene permiso para eliminar otro usuario")
         }
 
-        val usuarioEliminado = dtoMapper.userEntityToDTO(usuarioRegistrado)
-        return usuarioEliminado
+        return dtoMapper.userEntityToDTO(usuarioRegistrado)
     }
 
     fun updateUser(username: String, usuario: Usuario): Boolean {
