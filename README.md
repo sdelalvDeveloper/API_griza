@@ -1,6 +1,6 @@
  # Descripción de la API
 
-Este proyecto consiste en una API que maneja tres documentos principales: **Usuario**, **Dirección** y **Tareas**. A continuación, se detallan cada uno de los documentos y sus respectivos campos.
+Este proyecto consiste en una API que maneja tres documentos principales: **Usuario**, **Talleres** y **Reservas**. A continuación, se detallan cada uno de los documentos y sus respectivos campos.
 
 ## Documentos
 
@@ -14,64 +14,60 @@ Este documento representa a los usuarios registrados en el sistema.
 - `email` (String): Correo electrónico del usuario.
 - `password` (String): Contraseña encriptada del usuario.
 - `telefono` (String): Número de teléfono del usuario.
-- `direccion` (Direccion): Referencia a la dirección del usuario.
 - `rol` (String): USER o ADMIN (USER por defecto).
 
-### 2. Dirección
-Este documento almacena la información sobre las direcciones asociadas a los usuarios.
+
+### 3. Talleres
+Este documento representa los talleres asignados a los usuarios.
 
 **Campos:**
-- `id` (String): Identificador único de la dirección.
-- `calle` (String): Nombre de la calle.
-- `numero` (String): Número de la casa o apartamento.
-- `ciudad` (String): Ciudad de residencia.
-- `codigo_postal` (String): Código postal de la dirección.
-
-### 3. Tareas
-Este documento representa las tareas asignadas a los usuarios.
-
-**Campos:**
-- `id` (String): Identificador único de la tarea.
-- `usuario_id` (String): Identificador del usuario al que pertenece la tarea.
+- `id` (ObjectId): Identificador único del taller.
 - `titulo` (String): Título de la tarea.
-- `descripcion` (String): Descripción detallada de la tarea.
-- `estado` (String): Estado de la tarea (`pendiente`, `completada`).
-- `fecha_creacion` (Date): Fecha en la que se creó la tarea.
+- `descripcion` (String): Descripción detallada del taller.
+- `plazas` (Int): Plazas limitadas del taller.
+- `fecha` (Date): Fecha en la que se creó el taller.
+- `estado` (String): Estado del taller (`activo`, `cancelado`).
+- `reservas` (List<Reserva>): Lista que contiene las reservas del taller.
 
 ---
 
 ## ENDPOINTS
 
 ### 1. **Usuario**:
-- `POST /usuarios`: Crear un nuevo usuario (Registro).
+- `POST /usuarios/register`: Crear un nuevo usuario (Registro).
 - `POST /usuarios/login`: Autenticación de usuario (Login).
-- `GET /usuarios/{id}`: Obtener un usuario específico por su ID.
-- `PUT /usuarios/{id}`: Actualizar los datos de un usuario **(Solo Admin o el propio usuario)**.
-- `DELETE /usuarios/{id}`: Eliminar un usuario por su ID **(Solo Admin o el propio usuario)**.
-- `GET /usuarios`: Obtener una lista de todos los usuarios **(Solo Admin)**.
+- `GET /usuarios/{username}`: Obtener un usuario específico por su username.
+- `PUT /usuarios/updatePassword`: Actualizar la contraseña del usuario autenticado.
+- `PUT /usuarios/activarBono/{username}`: Activar el bono del usuario **(Solo Admin o el propio usuario)**.
+- `DELETE /usuarios/delete/{username}/{password}`: Eliminar un usuario proporcionando username y contraseña **(Solo Admin o el propio usuario)**.
+- `GET /usuarios/getAll`: Obtener una lista de todos los usuarios **(Solo Admin)**.
 
-### 2. **Dirección**:
-- `POST /direcciones`: Crear una nueva dirección.
-- `GET /direcciones/{id}`: Obtener una dirección específica por su ID.
-- `PUT /direcciones/{id}`: Actualizar una dirección existente.
-- `DELETE /direcciones/{id}`: Eliminar una dirección por su ID.
-- `GET /usuarios/{usuario_id}/direcciones`: Obtener todas las direcciones de un usuario.
 
-### 3. **Tareas**:
-- `POST /tareas`: Crear una nueva tarea (por cualquier usuario o Admin).
-- `GET /tareas/{id}`: Obtener una tarea específica por su ID.
-- `PUT /tareas/{id}`: Actualizar una tarea **(Solo Admin)**.
-- `DELETE /tareas/{id}`: Eliminar una tarea **(Solo Admin o la propia tarea del usuario)**.
-- `GET /usuarios/{usuario_id}/tareas`: Obtener todas las tareas de un usuario **(Solo Admin para otros usuarios)**.
-- `GET /tareas`: Obtener todas las tareas **(Solo Admin)**.
+### 2. **Talleres**:
+- `GET /talleres/{id}`: Obtener un taller específico por su ID.
+- `GET /talleres/getAll`: Obtener una lista de todos los talleres.
+- `POST /talleres/register`: Registrar un nuevo taller.
+- `PUT /talleres/update/{id}`: Actualizar un taller existente por su ID.
+- `DELETE /talleres/delete/{id}`: Eliminar un taller por su ID **(Requiere autenticación)**.
+
+
+### 3. **Reservas**:
+- `GET /reservas/{username}`: Obtener todas las reservas de un usuario específico **(Requiere autenticación)**.
+- `GET /reservas/getAll`: Obtener todas las reservas del sistema **(Requiere autenticación)**.
+- `GET /reservas/first/{username}`: Obtener la primera reserva de un usuario **(Requiere autenticación)**.
+- `POST /reservas/register`: Registrar una nueva reserva **(Requiere autenticación)**.
+- `DELETE /reservas/delete/{id}/taller/{tallerID}`: Eliminar una reserva específica por ID y ID del taller **(Requiere autenticación)**.
+- `DELETE /reservas/delete/{tallerID}`: Eliminar una reserva por ID del taller **(Requiere autenticación)**.
+- `DELETE /reservas/deleteAll/{username}`: Eliminar todas las reservas de un usuario **(Requiere autenticación)**.
+
 
 ---
 
   ## Lógica de negocio
 
 ### 1. **Roles de usuario**
-- El rol **USER** solo podrá ver, crear, marcar como completadas y eliminar tareas propias.
-- El rol **Admin** tendrá acceso completo para ver, crear, eliminar y actualizar tareas de cualquier usuario, así como ver todos los usuarios.
+- El rol **USER** solo podrá ver, registrar o eliminar las reservas propias.
+- El rol **ADMIN** tendrá acceso completo para registrar, eliminar y actualizar cualquier usuario, talleres y reservas así como verlos todos.
 
 ### 2. **Autenticación**
 - Los usuarios deben autenticarse para obtener un token JWT. Este token debe incluir los detalles del rol (User o Admin) y se debe verificar en cada solicitud para garantizar que el usuario tenga acceso al recurso solicitado.
@@ -80,11 +76,14 @@ Este documento representa las tareas asignadas a los usuarios.
 - **Usuario con rol USER** solo puede gestionar tareas y direcciones propias.
 - **Usuario con rol Admin** puede gestionar tareas, direcciones y usuarios de cualquier usuario.
 
-### 4. **Flujo de tareas**
-- Las tareas pueden pasar de un estado `pendiente` a `completada`, pero un Admin puede modificar cualquier tarea, mientras que un usuario solo puede modificar las suyas.
+### 4. **Flujo de talleres**
+- Los talleres pueden pasar de un estado `disponible` a `completo`, según se cubran las plazas. ADMIN es el único que puede crear, modificar o eliminar talleres
 
-### 5. **Protección de datos**
-- Un usuario solo puede actualizar o eliminar su propia cuenta, tareas y direcciones. Las solicitudes a recursos de otros usuarios serán bloqueadas si no es un Admin.
+### 5. **Flujo de reservas**
+- Las reservas pueden ser observadas, registradas y eliminadas por el propio usuario y solo las propias. Mientras que ADMIN tiene acceso a todas las reservas.
+
+### 6. **Protección de datos**
+- Un usuario solo puede actualizar o eliminar su propia cuenta, tareas y direcciones. Las solicitudes a recursos de otros usuarios serán bloqueadas si no es un ADMIN.
 
 ---
 
@@ -120,120 +119,11 @@ Este documento representa las tareas asignadas a los usuarios.
   
 ---
 
-## Pruebas gestión de usuarios
+## Pruebas
 
-### Retrofit
-Es un object que contiene la url de nuestra api en render y nos devuelve un ApiService.
-![Object Retrofit](assets/retrofit.png)
+Se han realizado varias pruebas en la carpeta *test/kotlin/com.es.API_REST_SEGURA*.
+Para ello se ha tenido que importar nuevas dependencias para poder hacer los test automáticos, creando mockk para cada *service* y para *AuthenticationManager*. Sin embargo, usamos *SecurityConfig* real para simular la seguridad de la API con los roles.
 
-### ApiService
-Es una interfaz que se encarga de las peticiones a nuestra api.
-![Interface ApiService](assets/apiService.png)
-
-### Clases para login
-Son las clases que usamos para mandar la petición del login y para el *Response* del endpoint correspondiente.
-![Clases login](assets/clases_login.png)
-
-### Clases para registro
-Son las clases que usamos para mandar la petición del registro y para el *Response* del endpoint.
-![Clases login](assets/clases_registro.png)
-
-### Pruebas login
-Primero comprobamos que nuestra base de datos está vacía.
-![BD](assets/comprobar_bd.png)
-
-Si intentamos loguearnos, lógicamente dará error ya que no existe ningún usuario registrado.
-![Login_intro_inexistente](assets/intro_login_pepe.png)
-![Login_respuesta_inexistente](assets/respuesta_login_pepe_incorrecto.png)
-
-Vamos a registrar un usuario de forma correcta para hacer las pruebas del login. Después probaremos los errores del registro.
-![Intro_user](assets/intro_registro_correcto.png)
-![Respuesta_registro](assets/respuesta_registro_correcto.png)
-
-Volvemos a nuestra pantalla de login.
-Vamos a intentar acceder introduciendo mal la constraseña: correcta(123) - incorrecta(1234).
-![Login_incorrecto](assets/intro_login_pepe_incorrecto.png)
-![Login_incorrecto](assets/respuesta_login_pepe_incorrecto.png)
-
-Para comprobar un login correcto, introducimos la contraseña correcta del mismo usuario: Contraseña -> 123.
-![Login_correcto](assets/intro_login_pepe.png)
-![Login_correcto](assets/comprobar_pepe_login.png)
-
----
-
-## Pruebas registro
-
-Ya hemos introducido un usuario **pepe**.
-Vamos a intentar introducir otro con el mismo nombre de usuario.
-![Registro_repetido](assets/intro_registro_repetido.png)
-![Registro_repetido](assets/respuesta_insert_repetido.png)
-
-Vamos a introducir un nuevo usuario para probar otros errores, en esta ocasión con la **Provincia**.
-![Registro_incorrecto](assets/intro_registro_provincia.png)
-![Registro_repetido](assets/respuesta_insert_provincia.png)
-
-Repetimos la misma acción, pero esta vez vamos a provocar que el error se produzca en el **Municipio**.
-![Registro_repetido](assets/intro_registro_municipio.png)
-![Registro_repetido](assets/respuesta_insert_municipio2.png)
-
-Por último, intentamos registrar al nuevo usuario que tenga guerra nos ha dado, ahora si, con los datos correctos.
-![Registro_correcto](assets/intro_registro_municipio_correcto.png)
-![Registro_correcto](assets/respuesta_registro_municipio_correcto.png)
-
----
-
-## Pruebas tareas
-
-Primero mostramos los dos tipos de usuarios en nuestra base de datos: USER y ADMIN.
-![Usuarios](assets/users.png)
-
-### Pruebas USER
-Nuestro usuario **jose** es **USER**.
-Obtener sus tareas.
-![Usuarios](assets/obtener_tarea_user.png)
-
-Marcar una tarea como COMPLETADA por **jose**.
-![Usuarios](assets/user_tarea_completada.png)
-
-Eliminar una tarea propia.
-![Usuarios](assets/user_borrar_tarea.png)
-
-Eliminar una tarea de otro usuario.
-![Usuarios](assets/borrar_tarea_user_otro_user.png)
-
-Dar de alta una tarea para sí mismo.
-![Usuarios](assets/tarea_registrada_user.png)
-
-Dar de alta una tarea para otro usuario.
-![Usuarios](assets/user_tarea_user.png)
-
-### Pruebas ADMIN
-Nuestro usuario **sebas** es **ADMIN**.
-Obtener todas las tareas.
-![Usuarios](assets/todas_tareas_admin.png)
-
-Eliminar cualquier tarea.
-![Usuarios](assets/admin_borra_tarea_user.png)
-
-Dar de alta tarea para cualquier usuario.
-![Usuarios](assets/admin_registra_tarea_user.png)
-
----
-
-## PRUEBAS SOBRE LA INTERFAZ + VIDEO
-En la entrega de la tarea se adjunta el video donde se realizan las pruebas sobre el usuario y las tareas.
-
-Despliegue de la API en render:
-![render.png](assets/render.png)
-
-Estos son las peticiones que realiza la aplicación donde se incluye el token del usuario una vez logueado y que posteriormente veremos como lo almacenamos:
-![peticiones_tareas.png](assets/peticiones_tareas.png)
-
-Cuando el usuario se autoriza en nuestra aplicación de forma correcta, almacenamos de forma local su username y token para usarlo posteriormente en las peticiones:
-![guardar_sesion.png](assets/guardar_sesion.png)
-
-Una vez autorizado el usuario, la aplicación navega automáticamente a la ventana de sus tareas, realizando la petición correspondiente con el token, cargando así únicamente las tareas de dicho usuario:
-![cargar_tareas.png](assets/cargar_tareas.png)
 
 
 
