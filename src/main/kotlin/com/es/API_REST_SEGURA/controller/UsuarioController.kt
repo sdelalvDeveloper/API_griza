@@ -85,7 +85,7 @@ class UsuarioController {
         return ResponseEntity(usuarioEliminado, HttpStatus.NO_CONTENT)
     }
 
-    @PostMapping("/updatePassword")
+    @PutMapping("/updatePassword")
     fun updatePassword(
         httpRequest: HttpServletRequest,
         @RequestBody usuarioUpdatePasswordDTO: UsuarioUpdatePasswordDTO,
@@ -96,7 +96,7 @@ class UsuarioController {
         return ResponseEntity(usuarioActualizado, HttpStatus.OK)
     }
 
-    @PostMapping("/activarBono/{username}")
+    @PutMapping("/activarBono/{username}")
     fun updateBonoUsuario(
         httpRequest: HttpServletRequest,
         @PathVariable username: String,

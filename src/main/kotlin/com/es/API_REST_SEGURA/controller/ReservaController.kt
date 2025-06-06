@@ -49,7 +49,7 @@ class ReservaController {
         return ResponseEntity(reservaRegistrada, HttpStatus.CREATED)
     }
 
-    @DeleteMapping("delete/{id}/taller/{tallerID}")
+    @DeleteMapping("/delete/{id}/taller/{tallerID}")
     fun deleteReserva(httpRequest: HttpServletRequest,
                      @PathVariable id: String,
                       @PathVariable tallerID: String,
@@ -60,7 +60,7 @@ class ReservaController {
         return ResponseEntity.noContent().build()
     }
 
-    @DeleteMapping("delete/{tallerID}")
+    @DeleteMapping("/delete/{tallerID}")
     fun deleteReservaByIdTaller(httpRequest: HttpServletRequest,
                       @PathVariable tallerID: String,
                       authentication: Authentication
@@ -70,7 +70,7 @@ class ReservaController {
         return ResponseEntity.noContent().build()
     }
 
-    @GetMapping("first/{username}")
+    @GetMapping("/first/{username}")
     fun getFirstReservaByUsername(httpRequest: HttpServletRequest,
                                   @PathVariable username: String,
                                   authentication: Authentication

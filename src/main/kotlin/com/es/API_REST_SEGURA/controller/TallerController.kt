@@ -5,6 +5,7 @@ import com.es.API_REST_SEGURA.dto.TallerRegisterDTO
 import com.es.API_REST_SEGURA.model.EstadoTaller
 import com.es.API_REST_SEGURA.model.Taller
 import com.es.API_REST_SEGURA.service.TallerService
+import com.es.API_REST_SEGURA.util.DtoMapper
 import jakarta.servlet.http.HttpServletRequest
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,10 +24,11 @@ class TallerController {
     @GetMapping("/{id}")
     fun getTallerById(httpRequest: HttpServletRequest,
                       @PathVariable id: String
-    ): ResponseEntity<Taller> {
+    ): ResponseEntity<TallerDTO> {
         val objectId = ObjectId(id)
-        val tallerDTO = tallerService.getTallerById(objectId)
-        return ResponseEntity.ok(tallerDTO)
+        val taller = tallerService.getTallerById(objectId)
+        val mapper = DtoMapper()
+        return ResponseEntity.ok(mapper.tallerEntityToDTO(taller))
     }
 
     @GetMapping("/getAll")
@@ -57,7 +59,7 @@ class TallerController {
         return ResponseEntity.noContent().build()
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     fun updateTaller(
         httpRequest: HttpServletRequest,
                      @PathVariable id: String,
