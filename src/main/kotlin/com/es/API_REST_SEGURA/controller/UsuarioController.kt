@@ -80,9 +80,10 @@ class UsuarioController {
         @PathVariable username: String,
         @PathVariable password: String,
         authentication: Authentication): ResponseEntity<UsuarioDTO>? {
-        val usuarioEliminado = usuarioService.deleteUserByUsername(username, password, authentication)
+        usuarioService.deleteUserByUsername(username, password, authentication)
 
-        return ResponseEntity(usuarioEliminado, HttpStatus.NO_CONTENT)
+        return ResponseEntity.noContent().build()
+
     }
 
     @PutMapping("/updatePassword")
