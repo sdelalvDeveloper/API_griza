@@ -117,7 +117,7 @@ class ReservaService {
         reserva.id?.let { tallerService.updateReservasTaller(it, reserva.tallerID) }
         reserva.id?.let { reservaRepository.deleteReservaById(it) }
 
-        val usuario = usuarioService.getUserEntity(authentication.name)
+        val usuario = usuarioService.getUserEntity(reserva.username)
 
         // Sumar uno al bono
         val usuarioActualizado = usuario.copy(bono = usuario.bono + 1)
