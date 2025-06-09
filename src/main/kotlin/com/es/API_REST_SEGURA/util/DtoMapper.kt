@@ -100,7 +100,7 @@ class DtoMapper {
             taller.titulo,
             reserva.tallerID.toString(),
             reserva.estado,
-            reserva.fecha
+            taller.fecha
         )
         return reservaFullDTO
     }
