@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(ReservaController::class)
-@Import(SecurityConfig::class, ReservaControllerTestConfig::class)  // importa tu configuración de seguridad
+@Import(SecurityConfig::class, ReservaControllerTestConfig::class)
 class ReservaControllerTest {
 
     @Autowired
@@ -38,7 +38,6 @@ class ReservaControllerTest {
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-
     @Test
     fun `insertReserva devuelve reserva creada con estado 201`() {
         val reservaRegisterDTO = ReservaRegisterDTO(
@@ -51,7 +50,7 @@ class ReservaControllerTest {
             username = "usuario1",
             tituloTaller = "Taller de Kotlin",
             tallerID = "6842a062fca6cc216bef5277",
-            estado = EstadoReserva.ACTIVA,  // Asumiendo que EstadoReserva es un enum
+            estado = EstadoReserva.ACTIVA,
             fechaTaller = Date()
         )
 
