@@ -42,7 +42,7 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/usuarios/getAll").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/usuarios/{username}").authenticated()
                 .requestMatchers(HttpMethod.DELETE,"/usuarios/delete/{username}/{password}").authenticated()
-                .requestMatchers(HttpMethod.POST, "/usuarios/updatePassword").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/usuarios/updatePassword").authenticated()
                 .requestMatchers(HttpMethod.POST, "/usuarios/activarBono/{username}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/talleres/{id}").authenticated()
                 .requestMatchers(HttpMethod.GET,"/talleres/getAll").authenticated()
