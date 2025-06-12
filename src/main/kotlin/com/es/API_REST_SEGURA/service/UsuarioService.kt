@@ -145,7 +145,7 @@ class UsuarioService() : UserDetailsService {
             throw BadRequestException("La contraseña debe tener 6 caracteres")
         }
 
-        val usuarioActualizado = usuarioExiste.copy(password = usuario.newPassword)
+        val usuarioActualizado = usuarioExiste.copy(password = passwordEncoder.encode(usuario.newPassword))
 
         return usuarioRepository.updateByUsername(usuario.username, usuarioActualizado)
     }
