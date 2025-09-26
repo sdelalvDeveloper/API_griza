@@ -1,7 +1,7 @@
  # Descripción de la API
 
 Este proyecto consiste en una API que maneja tres documentos principales: **Usuario**, **Talleres** y **Reservas**. A continuación, se detallan cada uno de los documentos y sus respectivos campos.
-Esta API ha sido lanzada en Render para un uso real.
+Esta API ha sido desplegada en Render para un uso real.
 
 ## Documentos
 
